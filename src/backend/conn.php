@@ -4,7 +4,7 @@
     $username = "root";
     $password = "";
     $dbname = "quark_db";
-    $port = "3307"
+    $port = "3307";
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname, $port);
