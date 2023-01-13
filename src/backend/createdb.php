@@ -6,13 +6,14 @@
     CREATE TABLE IF NOT EXISTS User (
         id INT NOT NULL AUTO_INCREMENT,
         Email VARCHAR(255) NOT NULL UNIQUE,
-        Pasw VARCHAR(255) NOT NULL,
+        Password VARCHAR(255) NOT NULL,
         Nome VARCHAR(255) NOT NULL,
+        Token VARCHAR(500) NOT NULL,
         PRIMARY KEY (id)
     ) ENGINE=INNODB;
 
-    -- Create tabe Config if not EXISTS
-    CREATE TABLE IF NOT EXISTS Config (
+    -- Create tabe UserConfig if not EXISTS
+    CREATE TABLE IF NOT EXISTS UserConfig (
         id INT NOT NULL AUTO_INCREMENT,
         user INT NOT NULL,
         PRIMARY KEY (id),
@@ -62,8 +63,8 @@
         FOREIGN KEY (chatId) REFERENCES Chat(id)
     ) ENGINE=INNODB;
 
-    -- Create tabe Config if not EXISTS
-    CREATE TABLE IF NOT EXISTS Config (
+    -- Create tabe ChatConfig if not EXISTS
+    CREATE TABLE IF NOT EXISTS ChatConfig (
         id INT NOT NULL AUTO_INCREMENT,
         chat INT NOT NULL,
         PRIMARY KEY (id),
@@ -74,12 +75,12 @@
     CREATE TABLE IF NOT EXISTS Message (
         id INT NOT NULL AUTO_INCREMENT,
         chatId INT NOT NULL,
-        id INT NOT NULL,
+        userId INT NOT NULL,
         content VARCHAR(4000),
         date TIMESTAMP NOT NULL,
         PRIMARY KEY (id),
         FOREIGN KEY (chatId) REFERENCES Chat(id),
-        FOREIGN KEY (id) REFERENCES User(id)
+        FOREIGN KEY (userId) REFERENCES User(id)
     ) ENGINE=INNODB;
 
     */
@@ -92,12 +93,40 @@
     $userSql = "CREATE TABLE IF NOT EXISTS User (
         id INT NOT NULL AUTO_INCREMENT,
         Email VARCHAR(255) NOT NULL UNIQUE,
-        Pasw VARCHAR(255) NOT NULL,
+        Password VARCHAR(255) NOT NULL,
         Nome VARCHAR(255) NOT NULL,
+        Token VARCHAR(500) NOT NULL,
         PRIMARY KEY (id)
     ) ENGINE=INNODB;";
 
-    $configSql = "CREATE TABLE IF NOT EXISTS Config (
+    $chatSql = "CREATE TABLE IF NOT EXISTS Chat (
+        id INT NOT NULL AUTO_INCREMENT,
+        Name VARCHAR(255) NOT NULL UNIQUE,
+        owner INT NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (owner) REFERENCES User(id)
+    ) ENGINE=INNODB;";
+
+    $rolesSql = "CREATE TABLE IF NOT EXISTS Roles (
+        id INT NOT NULL AUTO_INCREMENT,
+        chatId INT NOT NULL,
+        role VARCHAR(255) NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (chatId) REFERENCES Chat(id)
+    ) ENGINE=INNODB;";
+
+    $menbersSql = "CREATE TABLE IF NOT EXISTS Menbers (
+        id INT NOT NULL AUTO_INCREMENT,
+        chatId INT NOT NULL,
+        role INT NOT NULL,
+        user INT NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (chatId) REFERENCES Chat(id),
+        FOREIGN KEY (role) REFERENCES Roles(id),
+        FOREIGN KEY (user) REFERENCES User(id)
+    ) ENGINE=INNODB;";
+
+    $configSql = "CREATE TABLE IF NOT EXISTS UserConfig (
         id INT NOT NULL AUTO_INCREMENT,
         user INT NOT NULL,
         PRIMARY KEY (id),
@@ -116,34 +145,7 @@
         FOREIGN KEY (chatId) REFERENCES Chat(id)
     ) ENGINE=INNODB;";
 
-    $chatSql = "CREATE TABLE IF NOT EXISTS Chat (
-        id INT NOT NULL AUTO_INCREMENT,
-        Name VARCHAR(255) NOT NULL UNIQUE,
-        owner INT NOT NULL,
-        PRIMARY KEY (id),
-        FOREIGN KEY (owner) REFERENCES User(id)
-    ) ENGINE=INNODB;";
-
-    $menbersSql = "CREATE TABLE IF NOT EXISTS Menbers (
-        id INT NOT NULL AUTO_INCREMENT,
-        chatId INT NOT NULL,
-        role INT NOT NULL,
-        user INT NOT NULL,
-        PRIMARY KEY (id),
-        FOREIGN KEY (chatId) REFERENCES Chat(id),
-        FOREIGN KEY (role) REFERENCES Roles(id),
-        FOREIGN KEY (user) REFERENCES User(id)
-    ) ENGINE=INNODB;";
-
-    $rolesSql = "CREATE TABLE IF NOT EXISTS Roles (
-        id INT NOT NULL AUTO_INCREMENT,
-        chatId INT NOT NULL,
-        role VARCHAR(255) NOT NULL,
-        PRIMARY KEY (id),
-        FOREIGN KEY (chatId) REFERENCES Chat(id)
-    ) ENGINE=INNODB;";
-
-    $configSql = "CREATE TABLE IF NOT EXISTS Config (
+    $chatConfigSql = "CREATE TABLE IF NOT EXISTS ChatConfig (
         id INT NOT NULL AUTO_INCREMENT,
         chat INT NOT NULL,
         PRIMARY KEY (id),
@@ -153,63 +155,63 @@
     $messageSql = "CREATE TABLE IF NOT EXISTS Message (
         id INT NOT NULL AUTO_INCREMENT,
         chatId INT NOT NULL,
-        id INT NOT NULL,
+        userId INT NOT NULL,
         content VARCHAR(4000),
         date TIMESTAMP NOT NULL,
         PRIMARY KEY (id),
         FOREIGN KEY (chatId) REFERENCES Chat(id),
-        FOREIGN KEY (id) REFERENCES User(id)
+        FOREIGN KEY (userId) REFERENCES User(id)
     ) ENGINE=INNODB;";
-
 
     // Create tables
     if ($conn->query($userSql) === TRUE) {
-        echo "Table User created successfully";
-    } else {
-        echo "Error creating table: " . $conn->error;
-    }
-
-    if ($conn->query($configSql) === TRUE) {
-        echo "Table Config created successfully";
-    } else {
-        echo "Error creating table: " . $conn->error;
-    }
-
-    if ($conn->query($notfySql) === TRUE) {
-        echo "Table Notfy created successfully";
+        echo "<br \>Table User created successfully<br \>";
     } else {
         echo "Error creating table: " . $conn->error;
     }
 
     if ($conn->query($chatSql) === TRUE) {
-        echo "Table Chat created successfully";
-    } else {
-        echo "Error creating table: " . $conn->error;
-    }
-
-    if ($conn->query($menbersSql) === TRUE) {
-        echo "Table Menbers created successfully";
+        echo "Table Chat created successfully<br \>";
     } else {
         echo "Error creating table: " . $conn->error;
     }
 
     if ($conn->query($rolesSql) === TRUE) {
-        echo "Table Roles created successfully";
+        echo "Table Roles created successfully<br \>";
+    } else {
+        echo "Error creating table: " . $conn->error;
+    }
+    
+    if ($conn->query($menbersSql) === TRUE) {
+        echo "Table Menbers created successfully<br \>";
     } else {
         echo "Error creating table: " . $conn->error;
     }
 
     if ($conn->query($configSql) === TRUE) {
-        echo "Table Config created successfully";
+        echo "Table UserConfig created successfully<br \>";
+    } else {
+        echo "Error creating table: " . $conn->error;
+    }
+
+    if ($conn->query($notfySql) === TRUE) {
+        echo "Table Notfy created successfully<br \>";
+    } else {
+        echo "Error creating table: " . $conn->error;
+    }
+
+    if ($conn->query($chatConfigSql) === TRUE) {
+        echo "Table ChatConfig created successfully<br \>";
     } else {
         echo "Error creating table: " . $conn->error;
     }
 
     if ($conn->query($messageSql) === TRUE) {
-        echo "Table Message created successfully";
+        echo "Table Message created successfully<br \>";
     } else {
         echo "Error creating table: " . $conn->error;
     }
 
+    // Close conn
     $conn->close();
 ?>
