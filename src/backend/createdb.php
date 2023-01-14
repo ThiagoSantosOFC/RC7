@@ -20,6 +20,15 @@
         FOREIGN KEY (user) REFERENCES User(id)
     ) ENGINE=INNODB;
 
+    -- Create tabe JoinLinks if not EXISTS
+    CREATE TABLE IF NOT EXISTS JoinLinks (
+        id INT NOT NULL AUTO_INCREMENT UNIQUE,
+        chatId INT NOT NULL,
+        link VARCHAR(255) NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (chatId) REFERENCES Chat(id)
+    ) ENGINE=INNODB;
+
     -- Create tabe Notfy if not EXISTS
     CREATE TABLE IF NOT EXISTS Notfy (
         id INT NOT NULL AUTO_INCREMENT,
@@ -36,7 +45,8 @@
     -- Create tabe Chat if not EXISTS
     CREATE TABLE IF NOT EXISTS Chat (
         id INT NOT NULL AUTO_INCREMENT,
-        Name VARCHAR(255) NOT NULL UNIQUE,
+        Name VARCHAR(255) NOT NULL,
+        IdUnique VARCHAR(255), NOT NULL UNIQUE,
         owner INT NOT NULL,
         PRIMARY KEY (id),
         FOREIGN KEY (owner) REFERENCES User(id)
@@ -101,10 +111,49 @@
 
     $chatSql = "CREATE TABLE IF NOT EXISTS Chat (
         id INT NOT NULL AUTO_INCREMENT,
-        Name VARCHAR(255) NOT NULL UNIQUE,
+        Name VARCHAR(255) NOT NULL,
+        IdUnique VARCHAR(255) NOT NULL UNIQUE,
         owner INT NOT NULL,
         PRIMARY KEY (id),
         FOREIGN KEY (owner) REFERENCES User(id)
+    ) ENGINE=INNODB;";
+
+    $joinLinksSql = "CREATE TABLE IF NOT EXISTS JoinLinks (
+        id INT NOT NULL AUTO_INCREMENT UNIQUE,
+        chatId INT NOT NULL,
+        link VARCHAR(255) NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (chatId) REFERENCES Chat(id)
+    ) ENGINE=INNODB;";
+
+    $chatConfigSql = "CREATE TABLE IF NOT EXISTS ChatConfig (
+        id INT NOT NULL AUTO_INCREMENT,
+        chat INT NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (chat) REFERENCES Chat(id)
+    ) ENGINE=INNODB;";
+
+    $messageSql = "CREATE TABLE IF NOT EXISTS Message (
+        id INT NOT NULL AUTO_INCREMENT,
+        chatId INT NOT NULL,
+        userId INT NOT NULL,
+        content VARCHAR(4000),
+        date TIMESTAMP NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (chatId) REFERENCES Chat(id),
+        FOREIGN KEY (userId) REFERENCES User(id)
+    ) ENGINE=INNODB;";
+
+    $notfySql = "CREATE TABLE IF NOT EXISTS Notfy (
+        id INT NOT NULL AUTO_INCREMENT,
+        user INT NOT NULL,
+        author INT NOT NULL,
+        chatId INT NOT NULL,
+        date TIMESTAMP NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (user) REFERENCES User(id),
+        FOREIGN KEY (author) REFERENCES User(id),
+        FOREIGN KEY (chatId) REFERENCES Chat(id)
     ) ENGINE=INNODB;";
 
     $rolesSql = "CREATE TABLE IF NOT EXISTS Roles (
@@ -208,6 +257,12 @@
 
     if ($conn->query($messageSql) === TRUE) {
         echo "Table Message created successfully<br \>";
+    } else {
+        echo "Error creating table: " . $conn->error;
+    }
+
+    if ($conn->query($joinLinksSql) === TRUE) {
+        echo "Table JoinLinks created successfully<br \>";
     } else {
         echo "Error creating table: " . $conn->error;
     }

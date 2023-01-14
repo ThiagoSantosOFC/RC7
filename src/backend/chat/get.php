@@ -2,7 +2,8 @@
     /*
         CREATE TABLE IF NOT EXISTS Chat (
             id INT NOT NULL AUTO_INCREMENT,
-            Name VARCHAR(255) NOT NULL UNIQUE,
+            Name VARCHAR(255) NOT NULL,
+            IdUnique VARCHAR(255), NOT NULL UNIQUE,
             owner INT NOT NULL,
             PRIMARY KEY (id),
             FOREIGN KEY (owner) REFERENCES User(id)
@@ -32,7 +33,58 @@
         This use get method
 
         url params:
-        chatId: int
+        uniqueid: string
+        name: string 
         token: string
     */
+
+    // Include config file
+    require_once "config.php";
+
+
+
+    // Get paramether from url and prevent null
+    $uniqueid = isset($_GET["uniqueid"]) ? $_GET["uniqueid"] : "";
+    $name = isset($_GET["name"]) ? $_GET["name"] : "";
+    $token = isset($_GET["token"]) ? $_GET["token"] : "";
+
+    // Create sql statement
+    $sql = "SELECT * FROM Chat WHERE ";
+
+    if (!empty($uniqueid)) {
+        $sql .= "IdUnique = '$uniqueid'";
+    }
+
+    if (!empty($name)) {
+        $sql .= "Name = '$name'";
+    }
+
+    if (!empty($token)) {
+        $sql .= "Token = '$token'";
+    }
+
+    // Execute sql statement
+    $result = mysqli_query($link, $sql);
+
+    // Verify if result is empty
+    if (mysqli_num_rows($result) == 0) {
+        http_response_code(404);
+        die();
+    }
+
+    // Fetch result
+    $row = mysqli_fetch_assoc($result);
+
+    // Create json
+    $json = array(
+        "id" => $row["id"],
+        "uniqueid" => $row["IdUnique"],
+        "name" => $row["Name"],
+        "token" => $row["Token"]
+    );
+
+    // Return json
+    echo json_encode($json);
+
+    exit(0);
 ?>

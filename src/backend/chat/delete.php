@@ -4,15 +4,17 @@
     // GET FROM JSON POST
     CREATE TABLE IF NOT EXISTS Chat (
         id INT NOT NULL AUTO_INCREMENT,
-        Name VARCHAR(255) NOT NULL UNIQUE,
+        Name VARCHAR(255) NOT NULL,
+        IdUnique VARCHAR(255), NOT NULL UNIQUE,
         owner INT NOT NULL,
         PRIMARY KEY (id),
         FOREIGN KEY (owner) REFERENCES User(id)
     ) ENGINE=INNODB;
 
+
     json post model:
     {
-        "name": "string",
+        "id_unique": "string",
         "owner_token": "string - token"
     }
 
@@ -47,15 +49,17 @@
     $data = json_decode($json, true);
 
     // Get data
-    $name = $data["name"];
+    $id_unique = $data["id_unique"];
     $owner_token = $data["owner_token"];
 
-    if (empty($name) || empty($owner_token)) {
+    if (empty($id_unique) || empty($owner_token)) {
         // Return error
         $json = array("status" => "error", "error" => "Empty fields");
         echo json_encode($json);
         exit();
     }
+
+    name
 
     // Get owner data
     $sql = "SELECT id, Token FROM User WHERE Token = '$owner_token'";
@@ -79,7 +83,7 @@
         }
         else{
             // Delete chat
-            $sql = "DELETE FROM Chat WHERE Name = '$name'";
+            $sql = "DELETE FROM Chat WHERE IdUnique = '$id_unique'";
             $result = $conn->query($sql);
 
             if ($conn->affected_rows == 0) {

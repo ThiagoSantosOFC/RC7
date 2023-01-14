@@ -12,7 +12,7 @@
 
     json post model:
     {
-        "name": "string",
+        "id_unique": "string",
         "owner_token": "string - token"
     }
 
@@ -47,10 +47,10 @@
     $data = json_decode($json, true);
 
     // Get data
-    $name = $data["name"];
+    $id_unique = $data["id_unique"];
     $owner_token = $data["owner_token"];
 
-    if (empty($name) || empty($owner_token)) {
+    if (empty($id_unique) || empty($owner_token)) {
         // Return error
         $json = array("status" => "error", "error" => "Empty fields");
         echo json_encode($json);
@@ -82,7 +82,7 @@
             $owner_id = $row["id"];
 
             // Update the chat data
-            $sql = "UPDATE Chat SET Name = '$name' WHERE owner = '$owner_id'";
+            $sql = "UPDATE Chat SET IdUinique = '$id_unique' WHERE owner = '$owner_id'";
             $result = $conn->query($sql);
 
             if ($result) {

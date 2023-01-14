@@ -4,7 +4,8 @@
     // GET FROM JSON POST
     CREATE TABLE IF NOT EXISTS Chat (
         id INT NOT NULL AUTO_INCREMENT,
-        Name VARCHAR(255) NOT NULL UNIQUE,
+        Name VARCHAR(255) NOT NULL,
+        IdUnique VARCHAR(255), NOT NULL UNIQUE,
         owner INT NOT NULL,
         PRIMARY KEY (id),
         FOREIGN KEY (owner) REFERENCES User(id)
@@ -89,8 +90,14 @@
             // Get owner id
             $owner = $row["id"];
 
+            // Create IdUnique
+            /*
+            The id unique is basicaly a hash md5 based on userID + owner_token + random String
+            */
+            $id_unique = md5($owner . $owner_token . uniqid());
+
             // Insert chat
-            $sql = "INSERT INTO Chat (Name, owner) VALUES ('$name', '$owner')";
+            $sql = "INSERT INTO Chat (Name, IdUnique, owner) VALUES ('$name', '$id_unique', '$owner')";
             $result = $conn->query($sql);
 
             // Insert the default role to chat [name: everyone]
