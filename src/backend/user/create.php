@@ -61,7 +61,7 @@
     }
 
     // Hash password
-    $password = password_hash($password, PASSWORD_DEFAULT);
+    $password = md5($password);
 
     // Create token
     $token = md5($email . $password . $nome);
