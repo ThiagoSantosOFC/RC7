@@ -57,7 +57,7 @@
     WHERE User.Token = 'Token';
 
     url params:
-    chatId: int
+    chat_idunique: 
     token: string
     */
 
@@ -71,7 +71,7 @@
     }
 
     // Get paramether from url and prevent null
-    $chatId = isset($_GET["chatId"]) ? $_GET["chatId"] : "";
+    $chatId = isset($_GET["chatId"]) ? $_GET["chat_idunique"] : "";
     $token = isset($_GET["token"]) ? $_GET["token"] : "";
     // echo $chatId;
     // echo $token;

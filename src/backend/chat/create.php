@@ -19,6 +19,17 @@
         FOREIGN KEY (chatId) REFERENCES Chat(id)
     ) ENGINE=INNODB;
 
+    CREATE TABLE IF NOT EXISTS Menbers (
+        id INT NOT NULL AUTO_INCREMENT,
+        chatId INT NOT NULL,
+        role INT NOT NULL,
+        user INT NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (chatId) REFERENCES Chat(id),
+        FOREIGN KEY (role) REFERENCES Roles(id),
+        FOREIGN KEY (user) REFERENCES User(id)
+    ) ENGINE=INNODB;
+
     json post model:
     {
         "name": "string",
@@ -107,6 +118,19 @@
             $chat_id = $row["id"];
             $sql = "INSERT INTO Roles (chatId, role) VALUES ('$chat_id', 'everyone')";
             $result = $conn->query($sql);
+
+            // Insert the owner role to chat and asing the user for
+            $sql = "INSERT INTO Roles (chatId, role) VALUES ('$chat_id', 'owner')";
+            $result = $conn->query($sql);
+
+            // Create a menber for the owner and asing the owner role
+            $sql = "SELECT * FROM Roles WHERE chatId = '$chat_id' AND role = 'owner'";
+            $result = $conn->query($sql);
+            $row = $result->fetch_assoc();
+            $role_id = $row["id"];
+            $sql = "INSERT INTO Menbers (chatId, role, user) VALUES ('$chat_id', '$role_id', '$owner')";
+            $result = $conn->query($sql);
+
 
             if ($result) {
                 // Return success
