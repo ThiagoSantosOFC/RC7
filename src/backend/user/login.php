@@ -94,6 +94,15 @@
 
             // Compare tokens
             if ($token == $userToken) {
+                // Start section
+                session_start();
+
+                // Set session
+                $_SESSION["token"] = $token;
+
+                // Set cokie
+                setcookie("token", $token, time() + (86400 * 30), "/");
+                
                 // Return user data
                 $json = array(
                     "status" => "success",

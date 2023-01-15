@@ -42,6 +42,19 @@
             PRIMARY KEY (id)
         ) ENGINE=INNODB;
 
+        -- Create tabe Notfy if not EXISTS
+        CREATE TABLE IF NOT EXISTS Notfy (
+            id INT NOT NULL AUTO_INCREMENT,
+            user INT NOT NULL,
+            author INT NOT NULL,
+            chatId INT NOT NULL,
+            date TIMESTAMP NOT NULL,
+            PRIMARY KEY (id),
+            FOREIGN KEY (user) REFERENCES User(id),
+            FOREIGN KEY (author) REFERENCES User(id),
+            FOREIGN KEY (chatId) REFERENCES Chat(id)
+        ) ENGINE=INNODB;
+
         json post model:
         {
             "chat_idunique": "string",
@@ -175,6 +188,36 @@
         "content" => $content,
         "date" => date("Y-m-d H:i:s")
     ));
+
+    // Create notify for each user in chat
+    $sql = "SELECT * FROM Menbers WHERE chatId = ? AND user != ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $chat["id"], $user["user"]);
+    $stmt->execute();
+
+    // Get result
+    $result = $stmt->get_result();
+
+    // Verify if user is member
+    if ($result->num_rows > 0) {
+        // Get users
+        $users = $result->fetch_all(MYSQLI_ASSOC);
+
+        // Insert notify for each user
+        foreach ($users as $user) {
+            // Insert notify
+            $sql = "INSERT INTO Notfy (user, author, chatId, date) VALUES (?, ?, ?, NOW())";
+
+            // Prepare statement
+            $stmt = $conn->prepare($sql);
+
+            // Bind params
+            $stmt->bind_param("iii", $user["user"], $user["user"], $chat["id"]);
+
+            // Execute statement
+            $stmt->execute();
+        }
+    }
 
     // Close connection
     $conn->close();
