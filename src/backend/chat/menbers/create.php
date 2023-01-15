@@ -77,6 +77,17 @@
             // Get chat id
             $chat = $chatResult->fetch_assoc()["id"];
 
+            // Verify if user already is on the server
+            $sql = "SELECT * FROM menbers where user = '$user' and chatId = '$chat'";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                // Return error
+                $json = array("status" => "error", "error" => "User already is on the chat");
+                echo json_encode($json);
+                exit();
+            }
+
             // Get role id
             $sql = "SELECT id FROM Roles WHERE Role = 'everyone' AND chatId = '$chat'";
             $roleResult = $conn->query($sql);

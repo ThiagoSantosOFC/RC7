@@ -38,18 +38,28 @@
         token: string
     */
 
-    // Include config file
-    require_once "config.php";
+    // Include conn file
+    require_once "../conn.php";
 
-
+    // Method get
+    if ($_SERVER["REQUEST_METHOD"] != "GET") {
+        http_response_code(405);
+        die();
+    }
 
     // Get paramether from url and prevent null
     $uniqueid = isset($_GET["uniqueid"]) ? $_GET["uniqueid"] : "";
     $name = isset($_GET["name"]) ? $_GET["name"] : "";
     $token = isset($_GET["token"]) ? $_GET["token"] : "";
+    // echo $uniqueid;
+    // echo $name;
+    
+    // Create sql statement preventing the fields that can be empty
+    $sql = "SELECT * FROM Chat ";
 
-    // Create sql statement
-    $sql = "SELECT * FROM Chat WHERE ";
+    if(!empty($uniqueid) || !empty($name)) {
+        $sql .= "WHERE ";
+    }
 
     if (!empty($uniqueid)) {
         $sql .= "IdUnique = '$uniqueid'";
@@ -59,32 +69,29 @@
         $sql .= "Name = '$name'";
     }
 
-    if (!empty($token)) {
-        $sql .= "Token = '$token'";
+
+    // echo $sql;
+
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $json = array(
+            "status" => "success",
+            "chat" => array(
+                "id" => $row["id"],
+                "name" => $row["Name"],
+                "idunique" => $row["IdUnique"],
+                "owner" => $row["owner"]
+            )
+        );
+        echo json_encode($json);
+    } else {
+        $json = array("status" => "error", "error" => "Not found");
+        echo json_encode($json);
     }
 
-    // Execute sql statement
-    $result = mysqli_query($link, $sql);
-
-    // Verify if result is empty
-    if (mysqli_num_rows($result) == 0) {
-        http_response_code(404);
-        die();
-    }
-
-    // Fetch result
-    $row = mysqli_fetch_assoc($result);
-
-    // Create json
-    $json = array(
-        "id" => $row["id"],
-        "uniqueid" => $row["IdUnique"],
-        "name" => $row["Name"],
-        "token" => $row["Token"]
-    );
-
-    // Return json
-    echo json_encode($json);
+    $conn->close();
 
     exit(0);
 ?>
