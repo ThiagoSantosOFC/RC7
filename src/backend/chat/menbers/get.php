@@ -39,11 +39,22 @@
 
     INNER JOIN:
 
-    SELECT Menbers.*, User.Email, User.Nome, User.Token, Roles.role
+    SELECT Menbers.*, User.Email, User.Nome, User.Token, Roles.role, Chat.IdUnique
     FROM Menbers
     INNER JOIN User ON Menbers.user = User.id
-    INNER JOIN Roles ON Menbers.role = Roles.id;
+    INNER JOIN Roles ON Menbers.role = Roles.id
+    INNER JOIN Chat ON Menbers.chatId = Chat.id
+    WHERE Menbers.chatId = 2;
 
+    MARIADB VERSION:
+
+    SELECT Menbers.*, User.Email, User.Nome, User.Token, Roles.role, Chat.IdUnique
+    INNER JOIN User ON Menbers.user = User.id
+    INNER JOIN Roles ON Menbers.role = Roles.id
+    INNER JOIN Chat ON Menbers.chatId = Chat.id
+    WHERE Menbers.chatId = 2;
+    OR
+    WHERE User.Token = 'Token';
 
     url params:
     chatId: int
@@ -67,10 +78,12 @@
 
     // Create sql statement preventing the fields that can be empty
     $sql = "";
-    $sql .= "SELECT Menbers.*, User.Email, User.Nome, User.Token, Roles.role ";
+    $sql .= "SELECT Menbers.*, User.Email, User.Nome, User.Token, Roles.role, Chat.IdUnique as chatUniqueID ";
     $sql .= "FROM Menbers ";
     $sql .= "INNER JOIN User ON Menbers.user = User.id ";
     $sql .= "INNER JOIN Roles ON Menbers.role = Roles.id ";
+    $sql .= "INNER JOIN Chat ON Menbers.chatId = Chat.id ";
+
 
     if(!empty($chatId) || !empty($token)) {
         $sql .= "WHERE ";
