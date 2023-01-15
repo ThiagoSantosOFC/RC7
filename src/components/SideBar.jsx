@@ -4,40 +4,51 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export const SideBar = () => {
-    const [nav, setNav] = useState(false);
-  
-    const handleNav = () => {
-        setNav(!nav);
-      };
-    useEffect(() => {
-        const Main = document.getElementById("Main");
-        const open = document.getElementById("open");
-        const close = document.getElementById("close");
+  const [nav, setNav] = useState(false);
 
-        if (nav) {
-            Main.classList.remove("translate-x-full");
-            Main.classList.add("translate-x-0");
-            open.classList.add("hidden");
-            close.classList.remove("hidden");
-        }
-        if (!nav) {
-            Main.classList.remove("translate-x-0");
-            Main.classList.add("translate-x-full");
-            open.classList.remove("hidden");
-            close.classList.add("hidden");
-        }
-    }, [nav]);
+  const handleNav = () => {
+    setNav(!nav);
+  };
+  useEffect(() => {
+    const Main = document.getElementById("Main");
+    const open = document.getElementById("open");
+    const close = document.getElementById("close");
 
+    if (nav) {
+      Main.classList.remove("translate-x-full");
+      Main.classList.add("translate-x-0");
+      open.classList.add("hidden");
+      close.classList.remove("hidden");
+    }
+    if (!nav) {
+      Main.classList.remove("translate-x-0");
+      Main.classList.add("translate-x-full");
+      open.classList.remove("hidden");
+      close.classList.add("hidden");
+    }
+  }, [nav]);
 
+  //when click iconAbrePerfil drop down menu
+  const handleMenuPerfil = () => {
+    const menuPerfil = document.getElementById("menuPerfil");
+    menuPerfil.classList.toggle("hidden");
 
+    const arrowPerfil = document.getElementById("iconAbrePerfil");
+    arrowPerfil.classList.toggle("rotate-180");
+  };
 
-  
+  const handleMenuQuarks = () => {
+    const menuQuarks = document.getElementById("menuQuarks");
+    //translates the arrow
+    const arrowQuarks = document.getElementById("iconAbreQuarks");
+    menuQuarks.classList.toggle("hidden");
+  };
 
   return (
     <div>
       <div className="rounded-r bg-gray-900 xl:hidden flex justify-between w-full p-6 items-center ">
         <div className="flex justify-between  items-center space-x-3">
-        <Image
+          <Image
             src="/assets/logo Quark.svg"
             width={50}
             height={50}
@@ -45,7 +56,6 @@ export const SideBar = () => {
           />
 
           <p className="text-2xl leading-6 text-white">QuarkChat</p>
-    
         </div>
         <div aria-label="toggler" className="flex justify-center items-center">
           <button
@@ -55,7 +65,6 @@ export const SideBar = () => {
             className="hidden focus:outline-none focus:ring-2"
           >
             <svg
-              
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -92,7 +101,6 @@ export const SideBar = () => {
             className=" focus:outline-none focus:ring-2"
           >
             <svg
-             
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -134,12 +142,12 @@ export const SideBar = () => {
 
         <div className="flex flex-col justify-start items-center   px-6 border-b border-gray-600 w-full  ">
           <button
-            onClick="toggleMenu('menu1')"
+            onClick={handleMenuPerfil}
             className="focus:outline-none focus:text-indigo-400 text-left  text-white flex justify-between items-center w-full py-5 space-x-14  "
           >
             <p className="text-sm leading-5  uppercase">Visão do perfil</p>
             <svg
-              id="icon1"
+              id="iconAbrePerfil"
               className="transform"
               width="24"
               height="24"
@@ -157,7 +165,7 @@ export const SideBar = () => {
             </svg>
           </button>
           <div
-            id="menu1"
+            id="menuPerfil"
             className="flex justify-start  flex-col w-full md:w-auto items-start pb-1 "
           >
             <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
@@ -320,14 +328,14 @@ export const SideBar = () => {
           </div>
         </div>
         <div className="flex flex-col justify-start items-center   px-6 border-b border-gray-600 w-full  "></div>
-        <div className="flex flex-col justify-between items-center h-full pb-6   px-6  w-full  space-y-32 ">
+        <div className="flex flex-col justify-between items-center h-full pb-2   px-6  w-full  space-y-32 ">
           <button
-            onClick="showMenu3(true)"
-            className="focus:outline-none focus:text-indigo-400  text-white flex justify-between items-center w-full py-5 space-x-14  "
+            onClick={handleMenuQuarks}
+            className="focus:outline-none focus:text-indigo-400  text-white flex justify-between items-center w-full  space-x-14  "
           >
             <p className="text-sm leading-5  uppercase">Quarks</p>
             <svg
-              id="icon3"
+              id="iconAbreQuarks"
               className="rotate-180 transform"
               width="24"
               height="24"
@@ -344,6 +352,66 @@ export const SideBar = () => {
               />
             </svg>
           </button>
+          <div
+            id="menuQuarks"
+            className="flex flex-col justify-start items-start space-y-4 w-full"
+          >
+          
+             <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
+  
+              <p className="text-sm leading-5  ">Criar Quark</p>
+            </button>
+
+
+            <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
+        
+              <p className="text-sm leading-5  ">Entrar num Quark</p>
+            </button>
+           
+            <button
+              id="dropdownUsersButton"
+              data-dropdown-toggle="dropdownUsers"
+              data-dropdown-placement="bottom"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-00 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
+              type="button"
+            >
+              Meus Quarks{" "}
+              <svg
+                className="w-4 h-4 ml-2"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </button>
+
+            <div
+              id="dropdownUsers"
+              className="z-10 hidden bg-white rounded shadow w-60 dark:bg-gray-700"
+            >
+              <ul
+                className="h-48 py-1 overflow-y-auto text-gray-700 dark:text-gray-200"
+                aria-labelledby="dropdownUsersButton"
+              >
+                <li>
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-sm capitalize transition-colors duration-200 transform dark:hover:bg-gray-600 hover:bg-gray-200"
+                  >
+                    Quark 1
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
 
           <div className=" flex justify-between items-center w-full">
             <div className="flex justify-center items-center  space-x-2">
@@ -352,8 +420,8 @@ export const SideBar = () => {
                   className="rounded-full"
                   src="https://i.ibb.co/L1LQtBm/Ellipse-1.png"
                   alt="avatar"
-                    width={40} 
-                    height={40}
+                  width={40}
+                  height={40}
                 />
               </div>
               <div className="flex justify-start flex-col items-start">
@@ -393,5 +461,4 @@ export const SideBar = () => {
       </div>
     </div>
   );
-
 };

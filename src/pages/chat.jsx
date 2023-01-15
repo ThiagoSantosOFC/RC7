@@ -1,8 +1,16 @@
 import React from 'react'
-
+import { SideBar } from "../components/SideBar";
+import Head from "next/head";
 const chat = () => {
   return (
-<div className='min-h-full min-w-full flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 '>
+<div>
+<Head>
+        <title>QuarkChat</title>
+        <meta name="description" content="Fale com seus amigos" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/assets/logo Quark.svg" />
+      </Head>
+    <SideBar />
 
 </div>
   )
