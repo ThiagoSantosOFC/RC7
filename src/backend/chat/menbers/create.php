@@ -13,7 +13,7 @@
 
     json post model:
     {
-        "chat_name": "string",
+        "chat_idunique": "string",
         "user_token": "string",
     }
 
@@ -51,10 +51,10 @@
     $data = json_decode($json, true);
 
     // Get data
-    $chat_name = $data["chat_name"];
+    $chat_idunique = $data["chat_idunique"];
     $user_token = $data["user_token"];
 
-    if (empty($chat_name) || empty($user_token)) {
+    if (empty($chat_idunique) || empty($user_token)) {
         // Return error
         $json = array("status" => "error", "error" => "Empty fields");
         echo json_encode($json);
@@ -70,7 +70,7 @@
         $user = $userResult->fetch_assoc()["id"];
 
         // Get chat id
-        $sql = "SELECT id FROM Chat WHERE Name = '$chat_name'";
+        $sql = "SELECT id FROM Chat WHERE IdUnique = '$chat_idunique'";
         $chatResult = $conn->query($sql);
 
         if ($chatResult->num_rows > 0) {

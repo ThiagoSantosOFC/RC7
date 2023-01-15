@@ -12,10 +12,18 @@
         PRIMARY KEY (id)
     ) ENGINE=INNODB;
 
+    -- Create tabe UserConfig if not EXISTS
+    CREATE TABLE IF NOT EXISTS UserConfig (
+        id INT NOT NULL AUTO_INCREMENT,
+        user INT NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (user) REFERENCES User(id)
+    ) ENGINE=INNODB;
+
     json post model:
     {
         "email": "email",
-        "pasword": "pasw",
+        "password": "pasw",
         "nome": "nome"
     }
 
@@ -69,9 +77,24 @@
     // Create sql string
     $sql = "INSERT INTO User (Email, Password, Nome, Token) VALUES ('$email', '$password', '$nome', '$token')";
 
+    //  create userconfig
+    $sql2 = "INSERT INTO UserConfig (user) VALUES (LAST_INSERT_ID())";
+
     // Execute sql string
     if ($conn->query($sql) === TRUE) {
+        // Create userconfig
+        $conn->query($sql2);
         // Return token
+
+        // Start section
+        session_start();
+
+        // Set session
+        $_SESSION["token"] = $token;
+
+        // Set cokie
+        setcookie("token", $token, time() + (86400 * 30), "/");
+
         $json = array("status" => "success", "token" => $token);
         echo json_encode($json);
     } else {
