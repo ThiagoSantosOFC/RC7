@@ -5,11 +5,35 @@
     -- Create tabe User if not EXISTS
     CREATE TABLE IF NOT EXISTS User (
         id INT NOT NULL AUTO_INCREMENT,
+        tag STRING NOT NULL,
         Email VARCHAR(255) NOT NULL UNIQUE,
         Password VARCHAR(255) NOT NULL,
         Nome VARCHAR(255) NOT NULL,
         Token VARCHAR(500) NOT NULL,
         PRIMARY KEY (id)
+    ) ENGINE=INNODB;
+
+    -- Create table Friends if not EXISTS
+    CREATE TABLE IF NOT EXISTS Friends (
+        id INT NOT NULL AUTO_INCREMENT,
+        user INT NOT NULL,
+        friend INT NOT NULL,
+        blocked STRING,
+        PRIMARY KEY (id),
+        FOREIGN KEY (user) REFERENCES User(id),
+        FOREIGN KEY (friend) REFERENCES User(id)
+    ) ENGINE=INNODB;
+
+    -- Create table DirectMessage
+    CREATE TABLE IF NOT EXISTS DirectMessage (
+        id INT NOT NULL AUTO_INCREMENT,
+        user INT NOT NULL,
+        friend INT NOT NULL,
+        message VARCHAR(255) NOT NULL,
+        date TIMESTAMP NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (user) REFERENCES User(id),
+        FOREIGN KEY (friend) REFERENCES User(id)
     ) ENGINE=INNODB;
 
     -- Create tabe UserConfig if not EXISTS
@@ -51,6 +75,8 @@
         PRIMARY KEY (id),
         FOREIGN KEY (owner) REFERENCES User(id)
     ) ENGINE=INNODB;
+
+
 
     -- Create tabe Menbers if not EXISTS
     CREATE TABLE IF NOT EXISTS Menbers (
@@ -102,6 +128,7 @@
 
     $userSql = "CREATE TABLE IF NOT EXISTS User (
         id INT NOT NULL AUTO_INCREMENT,
+        tag VARCHAR(255) NOT NULL,
         Email VARCHAR(255) NOT NULL UNIQUE,
         Password VARCHAR(255) NOT NULL,
         Nome VARCHAR(255) NOT NULL,
@@ -116,6 +143,65 @@
         owner INT NOT NULL,
         PRIMARY KEY (id),
         FOREIGN KEY (owner) REFERENCES User(id)
+    ) ENGINE=INNODB;";
+
+    $frirendSql = "CREATE TABLE IF NOT EXISTS Friend (
+        id INT NOT NULL AUTO_INCREMENT,
+        user INT NOT NULL,
+        friend INT NOT NULL,
+        blocked STRING,
+        PRIMARY KEY (id),
+        FOREIGN KEY (user) REFERENCES User(id),
+        FOREIGN KEY (friend) REFERENCES User(id)
+    ) ENGINE=INNODB;";
+
+    $directMessageSql = "CREATE TABLE IF NOT EXISTS DirectMessage (
+        id INT NOT NULL AUTO_INCREMENT,
+        user INT NOT NULL,
+        friend INT NOT NULL,
+        message VARCHAR(255) NOT NULL,
+        date TIMESTAMP NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (user) REFERENCES User(id),
+        FOREIGN KEY (friend) REFERENCES User(id)
+    ) ENGINE=INNODB;";
+
+    $userConfigSql = "CREATE TABLE IF NOT EXISTS UserConfig (
+        id INT NOT NULL AUTO_INCREMENT,
+        user INT NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (user) REFERENCES User(id)
+    ) ENGINE=INNODB;";
+
+    $notfySql = "CREATE TABLE IF NOT EXISTS Notfy (
+        id INT NOT NULL AUTO_INCREMENT,
+        user INT NOT NULL,
+        author INT NOT NULL,
+        chatId INT NOT NULL,
+        date TIMESTAMP NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (user) REFERENCES User(id),
+        FOREIGN KEY (author) REFERENCES User(id),
+        FOREIGN KEY (chatId) REFERENCES Chat(id)
+    ) ENGINE=INNODB;";
+
+    $menbersSql = "CREATE TABLE IF NOT EXISTS Menbers (
+        id INT NOT NULL AUTO_INCREMENT,
+        chatId INT NOT NULL,
+        role INT NOT NULL,
+        user INT NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (chatId) REFERENCES Chat(id),
+        FOREIGN KEY (role) REFERENCES Roles(id),
+        FOREIGN KEY (user) REFERENCES User(id)
+    ) ENGINE=INNODB;";
+
+    $rolesSql = "CREATE TABLE IF NOT EXISTS Roles (
+        id INT NOT NULL AUTO_INCREMENT,
+        chatId INT NOT NULL,
+        role VARCHAR(255) NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (chatId) REFERENCES Chat(id)
     ) ENGINE=INNODB;";
 
     $joinLinksSql = "CREATE TABLE IF NOT EXISTS JoinLinks (

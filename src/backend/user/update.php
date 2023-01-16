@@ -16,7 +16,8 @@
         "email": "email",
         "pasword": "pasw",
         "nome": "nome",
-        "token": "token"
+        "token": "token",
+        "tag": tag <- int 0000
     }
 
     Json return for errors:
@@ -56,6 +57,13 @@
     $password = $data["password"];
     $nome = $data["nome"];
     $token = $data["token"];
+    // Tag is optional
+    $tag = "";
+    if (isset($data["tag"])) {
+        $tag = $data["tag"];
+    }
+
+    // Check if fields are empty
 
     if (empty($email) || empty($password) || empty($nome) || empty($token)) {
         // Return error
@@ -82,7 +90,20 @@
         $row = $result->fetch_assoc();
         if ($row["Token"] == $token) {
             // Update user
-            $sql = "UPDATE User SET Email = '$email', Password = '$password', Nome = '$nome', Token = '$newToken' WHERE Token = '$token'";
+            $sql = "";
+
+            // Check if tag is set
+            if (!empty($tag)) {
+                // Update user with tag
+                $sql = "UPDATE User SET Email = '$email', Password = '$password', Nome = '$nome', Token = '$newToken', Tag = '$tag' WHERE Token = '$token'";
+            }
+            else {
+                // Generate a new random tag
+                $tag = rand(1000, 9999);
+
+                // Update user without tag
+                $sql = "UPDATE User SET Email = '$email', Password = '$password', Nome = '$nome', Token = '$newToken', Tag = '$tag' WHERE Token = '$token'";
+            }
 
             // Execute query
             $result = $conn->query($sql);
