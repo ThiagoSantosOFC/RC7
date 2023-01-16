@@ -20,9 +20,10 @@ export const SideBar = () => {
     setId(id);
     setEmail(email);
     setNome(nome);
+    
     //remove "" from nome
     setNome(nome.replace(/['"]+/g, ""));
-
+    setTag(tag);
     setToken(token);
   }, []);
 
@@ -84,7 +85,7 @@ export const SideBar = () => {
   };
 
   function handleInviteUser() {
-    const amigoId = document.getElementById("userId").value;
+    const amigoId = document.getElementById("userTag").value;
     const inviteUsers = document.getElementById("inviteUser");
     
     inviteUsers.classList.add("hidden");
@@ -413,9 +414,9 @@ export const SideBar = () => {
                     <div className="bg-gray-900 rounded shadow-lg w-96">
                       <div className="border-b px-4 py-2 flex justify-between items-center">                      
                         <input
-                          id="userId"
+                          id="userTag"
                           type="text"
-                          placeholder="Digite o ID do amigo"
+                          placeholder="Digite a Tag do amigo"
                           className="bg-gray-800 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                         />
                         <button
@@ -603,7 +604,7 @@ export const SideBar = () => {
               </div>
               <div className="flex justify-start flex-col items-start">
                 <p className="cursor-pointer text-sm leading-5 text-white">
-                  {nome}+
+                  {nome + "#"+ tag}
                 </p>
                 <p className="cursor-pointer text-xs leading-3 text-gray-300">
                   {email}
