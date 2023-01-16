@@ -106,6 +106,7 @@ const handleNomeChange = (e) => {
                     type="email"
                     name="email"
                     id="email"
+                    onChange={handleEmailChange}
                     className=" sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     placeholder="name@company.com"
                     required=""
@@ -122,6 +123,7 @@ const handleNomeChange = (e) => {
                     type="text"
                     name="nome"
                     id="nome"
+                    onChange={handleNomeChange}
                     className=" sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     placeholder="John Doe"
                     required=""
@@ -139,6 +141,7 @@ const handleNomeChange = (e) => {
                     type="password"
                     name="password"
                     id="password"
+                    onChange={handlePasswordChange}
                     placeholder="••••••••"
                     className="sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     required=""
@@ -155,6 +158,7 @@ const handleNomeChange = (e) => {
                     type="password"
                     name="confirm-password"
                     id="confirm-password"
+                    onChange={handlePassword2Change}
                     placeholder="••••••••"
                     className=" sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     required=""
