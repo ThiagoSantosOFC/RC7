@@ -95,8 +95,6 @@
 
             // Compare tokens
             if ($token == $userToken) {
-                var_dump($user);
-
                 // Start section
                 session_start();
 
@@ -105,7 +103,6 @@
                 $_SESSION["email"] = $user["Email"];
                 $_SESSION["nome"] = $user["Nome"];
                 $_SESSION["id"] = $user["id"];
-                // Set tag
                 $_SESSION["tag"] = $user["tag"];
 
                 // Set cokie
