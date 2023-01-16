@@ -121,8 +121,8 @@
                     "token" => $token,
                     "email" => $user["Email"],
                     "nome" => $user["Nome"],
-                    "id" => $user["id"]
-                    
+                    "id" => $user["id"],
+                    "tag" => $user["Tag"]
                 );
                 echo json_encode($json);
                 exit();
