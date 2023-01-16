@@ -71,6 +71,149 @@ export const SideBar = () => {
     window.location.href = "/";
   }
 
+  //function to show dropdownUsers
+  const showMessages = () => {
+    const dropdownUsers = document.getElementById("dropdownUsers");
+    dropdownUsers.classList.toggle("hidden");
+  };
+
+  //invite users menu popup
+  const showInviteUsers = () => {
+    const inviteUsers = document.getElementById("inviteUser");
+    inviteUsers.classList.toggle("hidden");
+  };
+
+  function handleInviteUser() {
+    const amigoId = document.getElementById("userId").value;
+    const inviteUsers = document.getElementById("inviteUser");
+    
+    inviteUsers.classList.add("hidden");
+    fetch("", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        amigoId: amigoId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        
+      })
+
+      .catch((err) => {
+        setError(err);
+      });
+  }
+
+
+
+
+  function listUsers() {
+    //list users
+    const [users, setUsers] = useState([]);
+    useEffect(() => {
+      fetch("", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setUsers(data);
+        })
+        .catch((err) => {
+          setError(err);
+        });
+    }, []);
+  }
+
+  function listQuarks() {
+    //list quarks
+    const [quarks, setQuarks] = useState([]);
+    useEffect(() => {
+      fetch("", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setQuarks(data);
+        })
+        .catch((err) => {
+          setError(err);
+        });
+    }, []);
+  }
+
+  function sendDm () {
+    //function to send dm
+    const [dm, setDm] = useState([]);
+    const [error, setError] = useState("");
+
+    const [amigoId, setAmigoId] = useState("");
+    const [mensagem, setMensagem] = useState("");
+    const [data, setData] = useState("");
+    const [hora, setHora] = useState("");
+    const [quark, setQuark] = useState("");
+    
+    const [amigoNome, setAmigoNome] = useState("");
+
+
+
+    const token = localStorage.getItem("token");
+    const id = localStorage.getItem("id");
+    const nome = localStorage.getItem("nome");
+    const email = localStorage.getItem("email");
+
+    //amigo is a object that contais amigoID, amigoNome, amigoEmail
+   
+    const amigo = {
+      amigoId: amigoId,
+      amigoNome: amigoNome,
+      amigoEmail: amigoEmail
+    }
+
+
+
+
+
+    const handleDm = (e) => {
+      e.preventDefault();
+      fetch("", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          id: id,
+          mensagem: mensagem,
+          data: data,
+          hora: hora,
+          amigo: amigo,
+         
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setDm(data);
+        })
+        .catch((err) => {
+          setError(err);
+        });
+    }
+
+  }
+
   return (
     <div className="flex flex-row min-h-full min-w-full  ">
       <div className="rounded-r  bg-gray-900 xl:hidden flex justify-between w-full p-6 items-center ">
@@ -157,7 +300,7 @@ export const SideBar = () => {
       </div>
       <div
         id="Main"
-        className="xl:rounded-r transform  xl:translate-x-0  ease-in-out transition duration-500 flex justify-start items-start min-h-full  min-w-75% sm:w-64 ring-4  bg-gray-900 flex-col"
+        className="xl:rounded-r transform  xl:translate-x-0  ease-in-out transition duration-500 flex justify-start items-start min-h-full  min-w-75% sm:w-64 ring-2  bg-gray-900 flex-col"
       >
         <div className="hidden xl:flex justify-start p-6 items-center space-x-3">
           <Image
@@ -170,7 +313,7 @@ export const SideBar = () => {
           <p className="text-2xl leading-6 text-white">QuarkChat</p>
         </div>
 
-        <div className="flex flex-col justify-start items-center   px-6 border-b border-gray-600 w-full  ">
+        <div className="flex flex-col justify-start items-center px-6 border-b border-gray-600 w-full  ">
           <button
             onClick={handleMenuPerfil}
             className="focus:outline-none focus:text-indigo-400 text-left  text-white flex justify-between items-center w-full py-5 space-x-14  "
@@ -198,7 +341,10 @@ export const SideBar = () => {
             id="menuPerfil"
             className="flex justify-start  flex-col w-full md:w-auto items-start pb-1 "
           >
-            <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
+            <button
+              onClick={showMessages}
+              className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52"
+            >
               <svg
                 className="fill-stroke"
                 width="24"
@@ -215,8 +361,79 @@ export const SideBar = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-              <p className="text-base leading-4  ">Mensagens</p>
+              <p className="text-base leading-4 ">Mensagens</p>
             </button>
+            {/*
+              aqui vai a lista de dms
+
+            */}
+
+            <div className="">
+              <div
+                id="dropdownUsers"
+                className="z-10 hidden rounded shadow w-60 bg-gray-900"
+              >
+                <ul
+                  id="dropdownUsersList"
+                  className="h-48 py-1 overflow-y-auto  dark:text-gray-200"
+                  aria-labelledby="dropdownUsersButton"
+                ></ul>
+                <a
+                  onClick={showInviteUsers}
+                  className="flex items-center p-3 text-sm font-medium text-blue-600 border-t border-gray-200 bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
+                >
+                  <svg
+                    className="w-5 h-5 mr-1"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
+                  </svg>
+                  <span>Convidar um Amigo</span>
+                </a>
+                {/* pop up inviteUser */}
+                <div
+                  id="inviteUser"
+                  className="hidden absolute top-82 left-80 right-70 w-full h-75%"
+                >
+                  <div className="flex justify-center items-center h-full">
+                    <div className="bg-gray-900 rounded shadow-lg w-96">
+                      <div className="border-b px-4 py-2 flex justify-between items-center">                      
+                        <input
+                          id="userId"
+                          type="text"
+                          placeholder="Digite o ID do amigo"
+                          className="bg-gray-800 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                        />
+                        <button
+                          onClick={handleInviteUser}
+                          className="text-gray-300 hover:text-gray-100 focus:outline-none focus:text-gray-100"
+                        >
+                        
+                            <svg 
+                              width="24" 
+                              height="24" 
+                              viewBox="0 0 24 24" 
+                              fill="none" 
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path 
+                                d="M21 12H12V21H10V12H1V10H10V1H12V10H21V12Z" 
+                                fill="currentColor"
+                              />
+                            </svg>
+
+
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
               <svg
                 width="24"
@@ -254,6 +471,7 @@ export const SideBar = () => {
                   strokeLinejoin="round"
                 />
               </svg>
+
               <p className="text-base leading-4  ">Segurança</p>
             </button>
             <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2 w-full md:w-52">
@@ -357,90 +575,49 @@ export const SideBar = () => {
             </button>
           </div>
         </div>
-        <div className="flex flex-col justify-start items-center   px-6 border-b border-gray-600 w-full  "></div>
-        <div className="flex flex-col justify-between items-center h-full pb-2   px-6  w-full  space-y-32 ">
-          <button
-            onClick={handleMenuQuarks}
-            className="focus:outline-none focus:text-indigo-400  text-white flex justify-between items-center w-full  space-x-14  "
-          >
-            <p className="text-sm leading-5  uppercase">Quarks</p>
-            <svg
-              id="iconAbreQuarks"
-              className="rotate-180 transform"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M18 15L12 9L6 15"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-          <div
-            id="menuQuarks"
-            className="flex flex-col justify-start items-start  w-75%"
-          >
-            <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
-              <p className="text-sm leading-5  ">Criar Quark</p>
-            </button>
-
-            <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
-              <p className="text-sm leading-5  ">Entrar num Quark</p>
-            </button>
-
+        <div className="flex flex-col justify-start items-center   px-6 border-b border-gray-600 w-full  ">
+          <div className="flex flex-col justify-between items-center h-full pb-2   px-6  w-full  space-y-2 ">
             <button
-              id="dropdownUsersButton"
-              data-dropdown-toggle="dropdownUsers"
-              data-dropdown-placement="bottom"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-00 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
-              type="button"
+              onClick={handleMenuQuarks}
+              className="focus:outline-none focus:text-indigo-400  text-white flex justify-between items-center w-full  space-x-14  "
             >
-              Meus Quarks{" "}
+              <p className="text-sm leading-5  uppercase">Quarks</p>
               <svg
-                className="w-4 h-4 ml-2"
-                aria-hidden="true"
-                fill="none"
-                stroke="currentColor"
+                id="iconAbreQuarks"
+                className="rotate-180 transform"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
+                  d="M18 15L12 9L6 15"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                ></path>
+                />
               </svg>
             </button>
-
             <div
-              id="dropdownUsers"
-              className="z-10 hidden bg-white rounded shadow w-60 dark:bg-gray-700"
+              id="menuQuarks"
+              className="flex flex-col justify-start items-start  w-75%"
             >
-              <ul
-                className="h-48 py-1 overflow-y-auto text-gray-700 dark:text-gray-200"
-                aria-labelledby="dropdownUsersButton"
-              >
-                <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm capitalize transition-colors duration-200 transform dark:hover:bg-gray-600 hover:bg-gray-200"
-                  >
-                    Quark 1
-                  </a>
-                </li>
-              </ul>
+              <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
+                <p className="text-sm leading-5  ">Criar Quark</p>
+              </button>
+
+              <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
+                <p className="text-sm leading-5  ">Entrar num Quark</p>
+              </button>
             </div>
           </div>
+        </div>
 
-          <div className=" flex justify-between items-center w-full">
-            <div className="flex justify-center items-center  space-x-2">
+        <div className=" flex justify-start  flex-col w-full md:w-auto items-start pb-1 h-75% ">
+          <div className="flex flex-row justify-start items-center space-y-2 px-2 w-full">
+            <div className="flex justify-start items-start  space-x-2">
               <div>
                 <img
                   className="rounded-full"
@@ -485,7 +662,8 @@ export const SideBar = () => {
               />
             </svg>
           </div>
-          <div className="flex flex-col justify-start items-start space-y-2  mt- w-full">
+
+          <div className="flex flex-col justify-start items-start space-y-2 px-2 mt-2 w-full">
             <button onClick={handleLogout} className="cursor-pointer">
               <svg
                 width="24"
@@ -522,127 +700,121 @@ export const SideBar = () => {
         </div>
       </div>
 
-        <div className=" flex-auto  space-x-1">
-       
-
-          <div className="hidden flex-1 p:2 sm:p-6 justify-between  flex-col w-85% h-screen">
-            <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
-              <div className="relative flex items-center space-x-4">
-                <div className="relative">
-                  <span className="absolute text-green-500 right-0 bottom-0">
-                    <svg width="20" height="20">
-                      <circle cx="8" cy="8" r="8" fill="currentColor"></circle>
-                    </svg>
-                  </span>
-                  <img
-                    src=""
-                    alt="/"
-                    className="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
-                  />
-                </div>
-                <div className="flex flex-col leading-tight">
-                  <div className="text-2xl mt-1 flex items-center">
-                    <span className="text-gray-700 mr-3"></span>
-                  </div>
-                  <span className="text-lg text-gray-600"></span>
-                </div>
+      <div className=" flex-auto  space-x-1">
+        <div className="flex-1 p:2 sm:p-6 justify-between flex flex-col w-85% h-screen">
+          <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
+            <div className="relative flex items-center space-x-4">
+              <div className="relative">
+                <span className="absolute text-green-500 right-0 bottom-0">
+                  <svg width="20" height="20">
+                    <circle cx="8" cy="8" r="8" fill="currentColor"></circle>
+                  </svg>
+                </span>
+                <img
+                  src=""
+                  alt="/"
+                  className="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
+                />
               </div>
-              <div className="flex items-center space-x-2">
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    ></path>
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                    ></path>
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                    ></path>
-                  </svg>
-                </button>
+              <div className="flex flex-col leading-tight">
+                <div className="text-2xl mt-1 flex items-center">
+                  <span className="text-gray-700 mr-3"></span>
+                </div>
+                <span className="text-lg text-gray-600"></span>
               </div>
             </div>
-            <div
-              id="messages"
-              className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
-            ></div>
-            <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
-              <div className="relative flex">
-                <span className="absolute inset-y-0 flex items-center">
-                
-                </span>
-                <input
-                  type="text"
-                  placeholder="Escreva sua mensagem..."
-                  className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
-                />
-                <div className="absolute right-0 items-center inset-y-0 hidden sm:flex">
- 
-                  <button
-                    type="button"
-                    className="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
+            <div className="flex items-center space-x-2">
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  ></path>
+                </svg>
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div
+            id="messages"
+            className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
+          ></div>
+          <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
+            <div className="relative flex">
+              <span className="absolute inset-y-0 flex items-center"></span>
+              <input
+                type="text"
+                placeholder="Escreva sua mensagem..."
+                className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
+              />
+              <div className="absolute right-0 items-center inset-y-0 hidden sm:flex">
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
+                >
+                  <span className="font-bold">Enviar</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="h-6 w-6 ml-2 transform rotate-90"
                   >
-                    <span className="font-bold">Enviar</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="h-6 w-6 ml-2 transform rotate-90"
-                    >
-                      <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-                    </svg>
-                  </button>
-                </div>
+                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    
+    </div>
   );
 };
