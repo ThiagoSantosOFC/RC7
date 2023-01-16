@@ -94,21 +94,7 @@
 
             // Compare tokens
             if ($token == $userToken) {
-                // Start section
-                session_start();
-
-                // Set session
-                $_SESSION["token"] = $token;
-                $_SESSION["email"] = $user["Email"];
-                $_SESSION["nome"] = $user["Nome"];
-                $_SESSION["id"] = $user["id"];
-
-                // Set cokie
-                setcookie("token", $token, time() + (86400 * 30), "/");
-                setcookie("email", $user["Email"], time() + (86400 * 30), "/");
-                setcookie("nome", $user["Nome"], time() + (86400 * 30), "/");
-                setcookie("id", $user["id"], time() + (86400 * 30), "/");
-                
+           
 
                 // Return user data
                 $json = array(
@@ -117,6 +103,7 @@
                     "email" => $user["Email"],
                     "nome" => $user["Nome"],
                     "id" => $user["id"]
+                    
                 );
                 echo json_encode($json);
                 exit();
