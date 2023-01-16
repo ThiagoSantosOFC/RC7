@@ -1,10 +1,12 @@
 <?php
+header('Access-Control-Allow-Origin: *');
+header('Content-type: application/json');
     // Connection for db
     $servername = "localhost";
     $username = "root";
     $password = "";
     $dbname = "quark_db";
-    $port = "3307";
+    $port = "3306";
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname, $port);

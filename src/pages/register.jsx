@@ -1,7 +1,70 @@
 import React from "react";
 import Image from "next/image";
 import Head from "next/head";
+import { useState } from "react";
+import { useRouter } from "next/router";
+
 const register = () => {
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+const [password2, setPassword2] = useState("");
+const [nome, setnome] = useState("");
+const [error, setError] = useState("");
+
+const router = useRouter();
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (password !== password2) {
+        setError("Senhas não são iguais");
+        return;
+    }
+   //fetch with cors headers
+
+    const res = await fetch("http://localhost/backend/user/create.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email,
+            password,
+            nome,
+        }),
+    });
+    const data = await res.json();
+    if (data.error) {
+        setError(data.error);
+        console.log(data.error);
+    } else {
+        router.push("/login");
+    }
+
+
+};
+
+const handleEmailChange = (e) => {
+
+    setEmail(e.target.value);
+};
+
+const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+};
+
+const handlePassword2Change = (e) => {
+    setPassword2(e.target.value);
+};
+
+const handleNomeChange = (e) => {
+    setnome(e.target.value);
+};
+
+
+
+
+
+
   return (
     <div className="min-h-100%  min-w-100% flex items-center justify-center py-1 px-1 sm:px-2 lg:px-4">
       <Head>
@@ -43,23 +106,23 @@ const register = () => {
                     type="email"
                     name="email"
                     id="email"
-                    className=" sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-whitefocus:ring-blue-500 dark:focus:border-blue-500"
+                    className=" sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     placeholder="name@company.com"
                     required=""
                   />
                 </div>
                 <div>
                   <label
-                    htmlFor="username"
+                    htmlFor="nome"
                     className="block mb-2 text-sm font-medium  text-white"
                   >
-                    Seu username
+                    Seu nome
                   </label>
                   <input
                     type="text"
-                    name="username"
-                    id="username"
-                    className=" sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-whitefocus:ring-blue-500 dark:focus:border-blue-500"
+                    name="nome"
+                    id="nome"
+                    className=" sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     placeholder="John Doe"
                     required=""
                   />
@@ -89,7 +152,7 @@ const register = () => {
                     Confirme sua password
                   </label>
                   <input
-                    type="confirm-password"
+                    type="password"
                     name="confirm-password"
                     id="confirm-password"
                     placeholder="••••••••"
@@ -120,6 +183,7 @@ const register = () => {
                   </div>
                 </div>
                 <button
+                  onClick={handleSubmit}
                   type="submit"
                   className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >

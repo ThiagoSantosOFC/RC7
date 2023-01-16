@@ -1,7 +1,7 @@
 <?php
-    // Create user
-    // Recive json data method post
-    /*
+// Create user
+// Recive json data method post
+/*
     Table of users
     CREATE TABLE IF NOT EXISTS User (
         id INT NOT NULL AUTO_INCREMENT,
@@ -39,70 +39,70 @@
         "token": Token
     }
     */
-    // Include conn.php
-    require_once "../conn.php";
+// Include conn.php
+require_once "../conn.php";
 
-    // Verify if method is post
-    if ($_SERVER["REQUEST_METHOD"] != "POST") {
-        // Return error
-        $json = array("status" => "error", "error" => "Method not allowed");
-        echo json_encode($json);
-        exit();
-    }
 
-    // Get json data
-    $json = file_get_contents('php://input');
+// Verify if method is post
+if ($_SERVER["REQUEST_METHOD"] != "POST") {
+    // Return error
+    $json = array("status" => "error", "error" => "Method not allowed");
+    echo json_encode($json);
+    exit();
+}
 
-    // Decode json data
-    $data = json_decode($json, true);
+// Get json data
+$json = file_get_contents('php://input');
 
-    // Get data
-    $email = $data["email"];
-    $password = $data["password"];
-    $nome = $data["nome"];
+// Decode json data
+$data = json_decode($json, true);
 
-    if (empty($email) || empty($password) || empty($nome)) {
-        // Return error
-        $json = array("status" => "error", "error" => "Empty fields");
-        echo json_encode($json);
-        exit();
-    }
+// Get data
+$email = $data["email"];
+$password = $data["password"];
+$nome = $data["nome"];
 
-    // Hash password
-    $password = md5($password);
+if (empty($email) || empty($password) || empty($nome)) {
+    // Return error
+    $json = array("status" => "error", "error" => "Empty fields");
+    echo json_encode($json);
+    exit();
+}
 
-    // Create token
-    $token = md5($email . $password . $nome);
+// Hash password
+$password = md5($password);
 
-    // Create sql string
-    $sql = "INSERT INTO User (Email, Password, Nome, Token) VALUES ('$email', '$password', '$nome', '$token')";
+// Create token
+$token = md5($email . $password . $nome);
 
-    //  create userconfig
-    $sql2 = "INSERT INTO UserConfig (user) VALUES (LAST_INSERT_ID())";
+// Create sql string
+$sql = "INSERT INTO User (Email, Password, Nome, Token) VALUES ('$email', '$password', '$nome', '$token')";
 
-    // Execute sql string
-    if ($conn->query($sql) === TRUE) {
-        // Create userconfig
-        $conn->query($sql2);
-        // Return token
+//  create userconfig
+$sql2 = "INSERT INTO UserConfig (user) VALUES (LAST_INSERT_ID())";
 
-        // Start section
-        session_start();
+// Execute sql string
+if ($conn->query($sql) === TRUE) {
+    // Create userconfig
+    $conn->query($sql2);
+    // Return token
 
-        // Set session
-        $_SESSION["token"] = $token;
+    // Start section
+    session_start();
 
-        // Set cokie
-        setcookie("token", $token, time() + (86400 * 30), "/");
+    // Set session
+    $_SESSION["token"] = $token;
 
-        $json = array("status" => "success", "token" => $token);
-        echo json_encode($json);
-    } else {
-        // Return error
-        $json = array("status" => "error", "error" => $conn->error);
-        echo json_encode($json);
-    }
+    // Set cokie
+    setcookie("token", $token, time() + (86400 * 30), "/");
 
-    // Close connection
-    $conn->close();
-?>
+    $json = array("status" => "success", "token" => $token);
+    echo json_encode($json);
+} else {
+    // Return error
+    $json = array("status" => "error", "error" => $conn->error);
+    echo json_encode($json);
+}
+
+// Close connection
+$conn->close();
