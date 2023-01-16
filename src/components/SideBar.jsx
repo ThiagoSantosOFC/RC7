@@ -11,6 +11,8 @@ export const SideBar = () => {
   const [token, setToken] = useState("");
   const [error, setError] = useState("");
   const [tag, setTag] = useState("");
+  const [quarks, setQuarks] = useState([]);
+  
   useEffect(() => {
     const id = localStorage.getItem("id");
     const email = localStorage.getItem("email");
@@ -20,9 +22,10 @@ export const SideBar = () => {
     setId(id);
     setEmail(email);
     setNome(nome);
+    
     //remove "" from nome
     setNome(nome.replace(/['"]+/g, ""));
-
+    setTag(tag);
     setToken(token);
   }, []);
 
@@ -77,6 +80,10 @@ export const SideBar = () => {
     dropdownUsers.classList.toggle("hidden");
   };
 
+  const gotoJoinQuark = () => {
+    window.location.href = "/joinquark";
+  };
+
   //invite users menu popup
   const showInviteUsers = () => {
     const inviteUsers = document.getElementById("inviteUser");
@@ -84,7 +91,7 @@ export const SideBar = () => {
   };
 
   function handleInviteUser() {
-    const amigoId = document.getElementById("userId").value;
+    const amigoId = document.getElementById("userTag").value;
     const inviteUsers = document.getElementById("inviteUser");
     
     inviteUsers.classList.add("hidden");
@@ -114,7 +121,9 @@ export const SideBar = () => {
     window.location.href = "/settings";
   }
 
-
+function gotoCreateQuark() {
+  window.location.href = "/createquark";
+}
 
 
   function listUsers() {
@@ -141,24 +150,32 @@ export const SideBar = () => {
 
   function listQuarks() {
     //list quarks
-    const [quarks, setQuarks] = useState([]);
+    //abd theb fecth to `http://localhost/backend/chat/menbers/getservers.php?token=${token}`
+    const [quarks, setQuarks] = useState({});
+
     useEffect(() => {
-      fetch("", {
+      //get token from local storage
+      const token = localStorage.getItem("token");
+      fetch(`http://localhost/backend/chat/menbers/getservers.php?token=${token}`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          
         },
       })
         .then((res) => res.json())
         .then((data) => {
           setQuarks(data);
+          console.log(data);
+        
+  
         })
         .catch((err) => {
           setError(err);
         });
     }, []);
-  }
+  } 
+
+listQuarks();
 
   function sendDm () {
     //function to send dm
@@ -220,11 +237,8 @@ export const SideBar = () => {
 
   }
 
-  //if user select a userdm, show the messages
+ //function create Quark
  
-
-
-
   return (
     <div className="flex flex-row min-h-full min-w-full  ">
       <div className="rounded-r  bg-gray-900 xl:hidden flex justify-between w-full p-6 items-center ">
@@ -413,9 +427,9 @@ export const SideBar = () => {
                     <div className="bg-gray-900 rounded shadow-lg w-96">
                       <div className="border-b px-4 py-2 flex justify-between items-center">                      
                         <input
-                          id="userId"
+                          id="userTag"
                           type="text"
-                          placeholder="Digite o ID do amigo"
+                          placeholder="Digite a Tag do amigo"
                           className="bg-gray-800 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                         />
                         <button
@@ -576,14 +590,28 @@ export const SideBar = () => {
               id="menuQuarks"
               className="flex flex-col justify-start items-start  w-75%"
             >
-              <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
+              <button onClick={gotoCreateQuark} className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
                 <p className="text-sm leading-5  ">Criar Quark</p>
               </button>
 
-              <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
+              <button onClick={gotoJoinQuark} className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
                 <p className="text-sm leading-5  ">Entrar num Quark</p>
               </button>
             </div>
+            <div className="flex flex-col justify-start items-start  w-75%">
+              
+              {quarks.map((quark) => (
+                <button
+                  onClick={() => gotoQuark(quark.id)}
+                  key={quark.id}
+                  className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52"
+                 
+                />
+              ))}
+
+              
+        
+              </div>
           </div>
         </div>
 
@@ -603,7 +631,7 @@ export const SideBar = () => {
               </div>
               <div className="flex justify-start flex-col items-start">
                 <p className="cursor-pointer text-sm leading-5 text-white">
-                  {nome}+
+                  {nome + "#"+ tag}
                 </p>
                 <p className="cursor-pointer text-xs leading-3 text-gray-300">
                   {email}
