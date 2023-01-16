@@ -110,6 +110,11 @@ export const SideBar = () => {
   }
 
 
+  function gotoSettings() {
+    window.location.href = "/settings";
+  }
+
+
 
 
   function listUsers() {
@@ -132,6 +137,7 @@ export const SideBar = () => {
         });
     }, []);
   }
+
 
   function listQuarks() {
     //list quarks
@@ -214,20 +220,9 @@ export const SideBar = () => {
 
   }
 
-  function handleChat() {
-    const chat = document.getElementById("chat");
-    chat.classList.toggle("hidden");
-    setIsChat(false);
-  }
+  //if user select a userdm, show the messages
+ 
 
-  //if users select a quark or a user , it will open the chat
-  const [isChat, setIsChat] = useState(false);
-
-  if (isChat) {
-    handleChat();
-  }
-  else {
-  }
 
 
   return (
@@ -450,47 +445,8 @@ export const SideBar = () => {
               </div>
             </div>
 
-            <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M8 19C10.2091 19 12 17.2091 12 15C12 12.7909 10.2091 11 8 11C5.79086 11 4 12.7909 4 15C4 17.2091 5.79086 19 8 19Z"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M10.85 12.15L19 4"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M18 5L20 7"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M15 8L17 10"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-
-              <p className="text-base leading-4  ">Segurança</p>
-            </button>
-            <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2 w-full md:w-52">
+          
+            <button onClick={gotoSettings} className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2 w-full md:w-52">
               <svg
                 width="24"
                 height="24"
@@ -655,6 +611,7 @@ export const SideBar = () => {
               </div>
             </div>
             <svg
+            onClick={gotoSettings}
               className="cursor-pointer"
               width="24"
               height="24"
