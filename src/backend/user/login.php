@@ -103,7 +103,7 @@
                 $_SESSION["email"] = $user["Email"];
                 $_SESSION["nome"] = $user["Nome"];
                 $_SESSION["id"] = $user["id"];
-                $_SESSION["tag"] = $user["tag"];
+                $_SESSION["tag"] = $user["Tag"];
 
                 // Set cokie
                 setcookie("token", $token, time() + (86400 * 30), "/");
