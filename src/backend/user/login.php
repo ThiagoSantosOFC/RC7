@@ -111,7 +111,7 @@
                 setcookie("email", $user["Email"], time() + (86400 * 30), "/");
                 setcookie("nome", $user["Nome"], time() + (86400 * 30), "/");
                 setcookie("id", $user["id"], time() + (86400 * 30), "/");
-                setcookie("tag", $user["tag"], time() + (86400 * 30), "/");
+                setcookie("tag", $user["Tag"], time() + (86400 * 30), "/");
                 
 
 
