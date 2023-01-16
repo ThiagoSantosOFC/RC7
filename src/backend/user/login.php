@@ -95,6 +95,7 @@
 
             // Compare tokens
             if ($token == $userToken) {
+
                 // Start section
                 session_start();
 
@@ -113,6 +114,7 @@
                 setcookie("tag", $user["tag"], time() + (86400 * 30), "/");
                 
 
+
                 // Return user data
                 $json = array(
                     "status" => "success",
@@ -120,6 +122,7 @@
                     "email" => $user["Email"],
                     "nome" => $user["Nome"],
                     "id" => $user["id"]
+                    
                 );
                 echo json_encode($json);
                 exit();

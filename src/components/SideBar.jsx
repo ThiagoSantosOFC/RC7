@@ -10,13 +10,13 @@ export const SideBar = () => {
   const [nome, setNome] = useState("");
   const [token, setToken] = useState("");
   const [error, setError] = useState("");
-
+  const [tag, setTag] = useState("");
   useEffect(() => {
     const id = localStorage.getItem("id");
     const email = localStorage.getItem("email");
     const nome = localStorage.getItem("nome");
     const token = localStorage.getItem("token");
-
+    const tag = localStorage.getItem("tag");
     setId(id);
     setEmail(email);
     setNome(nome);
@@ -603,7 +603,7 @@ export const SideBar = () => {
               </div>
               <div className="flex justify-start flex-col items-start">
                 <p className="cursor-pointer text-sm leading-5 text-white">
-                  {nome}
+                  {nome}+
                 </p>
                 <p className="cursor-pointer text-xs leading-3 text-gray-300">
                   {email}
