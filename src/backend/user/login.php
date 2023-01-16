@@ -99,10 +99,17 @@
 
                 // Set session
                 $_SESSION["token"] = $token;
+                $_SESSION["email"] = $user["Email"];
+                $_SESSION["nome"] = $user["Nome"];
+                $_SESSION["id"] = $user["id"];
 
                 // Set cokie
                 setcookie("token", $token, time() + (86400 * 30), "/");
+                setcookie("email", $user["Email"], time() + (86400 * 30), "/");
+                setcookie("nome", $user["Nome"], time() + (86400 * 30), "/");
+                setcookie("id", $user["id"], time() + (86400 * 30), "/");
                 
+
                 // Return user data
                 $json = array(
                     "status" => "success",
