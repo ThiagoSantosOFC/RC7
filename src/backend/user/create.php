@@ -3,14 +3,16 @@
 // Recive json data method post
 /*
     Table of users
-    CREATE TABLE IF NOT EXISTS User (
+    $userSql = "CREATE TABLE IF NOT EXISTS User (
         id INT NOT NULL AUTO_INCREMENT,
+        tag STRING NOT NULL,
         Email VARCHAR(255) NOT NULL UNIQUE,
         Password VARCHAR(255) NOT NULL,
         Nome VARCHAR(255) NOT NULL,
         Token VARCHAR(500) NOT NULL,
         PRIMARY KEY (id)
-    ) ENGINE=INNODB;
+    ) ENGINE=INNODB;";
+
 
     -- Create tabe UserConfig if not EXISTS
     CREATE TABLE IF NOT EXISTS UserConfig (
@@ -75,8 +77,11 @@ $password = md5($password);
 // Create token
 $token = md5($email . $password . $nome);
 
+// Create tag string format 0000 The tag can only be numeric
+$tag = rand(1000, 9999);
+
 // Create sql string
-$sql = "INSERT INTO User (Email, Password, Nome, Token) VALUES ('$email', '$password', '$nome', '$token')";
+$sql = "INSERT INTO User (tag, Email, Password, Nome, Token) VALUES ('$tag', '$email', '$password', '$nome', '$token')";
 
 //  create userconfig
 $sql2 = "INSERT INTO UserConfig (user) VALUES (LAST_INSERT_ID())";

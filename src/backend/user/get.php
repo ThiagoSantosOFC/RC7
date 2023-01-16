@@ -16,6 +16,8 @@
     ?token=token
     ?email=email
     ?id=id
+    ?user_tag=0000&nome=pedro <- The tag need to be passed with the name of the user
+    ?nome=pedro&user_tag=9033
 
     Json return for errors:
     {
@@ -47,57 +49,52 @@
         exit();
     }
 
-    // Get url params and prevent null values
-    $token = isset($_GET["token"]) ? $_GET["token"] : "";
-    $email = isset($_GET["email"]) ? $_GET["email"] : "";
-    $id = isset($_GET["id"]) ? $_GET["id"] : "";
+    // Get data and prevent empty
+    $token = $_GET["token"] ?? '';
+    $email = $_GET["email"] ?? '';
+    $id = $_GET["id"] ?? '';
+    $user_tag = $_GET["user_tag"] ?? '';
+    $nome = $_GET["nome"] ?? '';
 
     // Verify if token is empty
-    if (empty($token) && empty($email) && empty($id)) {
+    if (empty($token) && empty($email) && empty($id) && empty($user_tag) && empty($nome)) {
         // Return error
-        $json = array("status" => "error", "error" => "Empty fields");
+        $json = array("status" => "error", "error" => "No data to search");
         echo json_encode($json);
         exit();
     }
 
+    // Create sql query
     $sql = "SELECT * FROM User WHERE ";
 
-    // Create query
+    // Verify if token is not empty
     if (!empty($token)) {
         $sql .= "Token = '$token'";
     } else if (!empty($email)) {
         $sql .= "Email = '$email'";
     } else if (!empty($id)) {
         $sql .= "id = '$id'";
+    } else if (!empty($user_tag)) {
+        $sql .= "Tag = '$user_tag' AND Nome = '$nome'";
     }
 
-    // Execute query
+    // Execute sql query
     $result = $conn->query($sql);
 
-    // Verify if user exists
-    if ($result->num_rows > 0) {
-        // Get user
-        $user = $result->fetch_assoc();
-
-        // Return user whitout the password
-        $json = array(
-            "status" => "success",
-            "user" => array(
-                "id" => $user["id"],
-                "email" => $user["Email"],
-                "nome" => $user["Nome"],
-                "token" => $user["Token"]
-            )
-        );
-    } else {
+    // Verify if result is empty
+    if ($result->num_rows == 0) {
         // Return error
         $json = array("status" => "error", "error" => "User not found");
+        echo json_encode($json);
+        exit();
     }
 
-    // Return json
-    echo json_encode($json);
+    // Get user
+    $user = $result->fetch_assoc();
 
-    // Close connection
-    $conn->close();
+    // Return success
+    $json = array("status" => "success", "user" => $user);
+    echo json_encode($json);
+    exit();
 ?>
         
