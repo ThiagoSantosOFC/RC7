@@ -149,7 +149,7 @@
         id INT NOT NULL AUTO_INCREMENT,
         user INT NOT NULL,
         friend INT NOT NULL,
-        blocked STRING,
+        blocked VARCHAR(255),
         PRIMARY KEY (id),
         FOREIGN KEY (user) REFERENCES User(id),
         FOREIGN KEY (friend) REFERENCES User(id)
@@ -307,6 +307,19 @@
 
     if ($conn->query($chatSql) === TRUE) {
         echo "Table Chat created successfully<br \>";
+    } else {
+        echo "Error creating table: " . $conn->error;
+    }
+
+    // 
+    if ($conn->query($frirendSql) === TRUE) {
+        echo "Table Friends created successfully<br \>";
+    } else {
+        echo "Error creating table: " . $conn->error;
+    }
+
+    if ($conn->query($directMessageSql) === TRUE) {
+        echo "Table DirectMessage created successfully<br \>";
     } else {
         echo "Error creating table: " . $conn->error;
     }
