@@ -1,13 +1,14 @@
 <?php
     /*
-    CREATE TABLE IF NOT EXISTS User (
+    $userSql = "CREATE TABLE IF NOT EXISTS User (
         id INT NOT NULL AUTO_INCREMENT,
+        tag STRING NOT NULL,
         Email VARCHAR(255) NOT NULL UNIQUE,
         Password VARCHAR(255) NOT NULL,
         Nome VARCHAR(255) NOT NULL,
         Token VARCHAR(500) NOT NULL,
         PRIMARY KEY (id)
-    ) ENGINE=INNODB;
+    ) ENGINE=INNODB;";
 
     How works
     Get user data by email 
@@ -102,12 +103,14 @@
                 $_SESSION["email"] = $user["Email"];
                 $_SESSION["nome"] = $user["Nome"];
                 $_SESSION["id"] = $user["id"];
+                $_SESSION["tag"] = $user["tag"];
 
                 // Set cokie
                 setcookie("token", $token, time() + (86400 * 30), "/");
                 setcookie("email", $user["Email"], time() + (86400 * 30), "/");
                 setcookie("nome", $user["Nome"], time() + (86400 * 30), "/");
                 setcookie("id", $user["id"], time() + (86400 * 30), "/");
+                setcookie("tag", $user["tag"], time() + (86400 * 30), "/");
                 
 
                 // Return user data
