@@ -95,6 +95,7 @@
 
             // Compare tokens
             if ($token == $userToken) {
+                var_dump($user);
 
                 // Start section
                 session_start();
@@ -104,15 +105,15 @@
                 $_SESSION["email"] = $user["Email"];
                 $_SESSION["nome"] = $user["Nome"];
                 $_SESSION["id"] = $user["id"];
-                $_SESSION["tag"] = $user["Tag"];
+                // Set tag
+                $_SESSION["tag"] = $user["tag"];
 
                 // Set cokie
                 setcookie("token", $token, time() + (86400 * 30), "/");
                 setcookie("email", $user["Email"], time() + (86400 * 30), "/");
                 setcookie("nome", $user["Nome"], time() + (86400 * 30), "/");
                 setcookie("id", $user["id"], time() + (86400 * 30), "/");
-                setcookie("tag", $user["Tag"], time() + (86400 * 30), "/");
-                
+                setcookie("tag", $user["tag"], time() + (86400 * 30), "/");                
 
 
                 // Return user data
@@ -122,7 +123,7 @@
                     "email" => $user["Email"],
                     "nome" => $user["Nome"],
                     "id" => $user["id"],
-                    "tag" => $user["Tag"]
+                    "tag" => $user["tag"]
                 );
                 echo json_encode($json);
                 exit();
