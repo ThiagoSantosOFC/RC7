@@ -12,6 +12,12 @@ const [nome, setnome] = useState("");
 const [error, setError] = useState("");
 
 const router = useRouter();
+useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      router.push("/login");
+    }
+  }, []);
+  
 
 const handleSubmit = async (e) => {
     e.preventDefault();
@@ -181,6 +187,14 @@ const handleTagChange = (e) => {
                 >
                   Atualizar
                 </button>
+                
+                <a
+                    href="/chat"
+                    className="flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-700"
+                    >
+                    Voltar
+                </a>
+
                
               </form>
             </div>
