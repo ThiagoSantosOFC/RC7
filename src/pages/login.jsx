@@ -44,7 +44,7 @@ const handleSubmit = async (e) => {
         localStorage.setItem("email", data.email);
         //set user tag
         localStorage.setItem("tag", data.tag);
-        
+
         router.push("/chat");
     }
 
@@ -133,7 +133,7 @@ const handlePasswordChange = (e) => {
                 <button
                   onClick={handleSubmit}
                   type="submit"
-                  className="w-full  text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-primary-600 hover:bg-primary-700 focus:ring-primary-800"
+                  className="w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-700"
                 >
                   Entrar na Conta
                 </button>
