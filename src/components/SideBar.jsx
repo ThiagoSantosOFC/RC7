@@ -214,6 +214,22 @@ export const SideBar = () => {
 
   }
 
+  function handleChat() {
+    const chat = document.getElementById("chat");
+    chat.classList.toggle("hidden");
+    setIsChat(false);
+  }
+
+  //if users select a quark or a user , it will open the chat
+  const [isChat, setIsChat] = useState(false);
+
+  if (isChat) {
+    handleChat();
+  }
+  else {
+  }
+
+
   return (
     <div className="flex flex-row min-h-full min-w-full  ">
       <div className="rounded-r  bg-gray-900 xl:hidden flex justify-between w-full p-6 items-center ">
@@ -700,7 +716,8 @@ export const SideBar = () => {
         </div>
       </div>
 
-      <div className=" flex-auto  space-x-1">
+
+      <div  id="chat" className=" flex-auto hidden  space-x-1">
         <div className="flex-1 p:2 sm:p-6 justify-between flex flex-col w-85% h-screen">
           <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
             <div className="relative flex items-center space-x-4">
