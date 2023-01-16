@@ -5,6 +5,25 @@ import { useState, useEffect } from "react";
 
 export const SideBar = () => {
   const [nav, setNav] = useState(false);
+  const [id, setId] = useState("");
+  const [email, setEmail] = useState("");
+  const [nome, setNome] = useState("");
+  const [token, setToken] = useState("");
+  const [error, setError] = useState("");
+
+
+  useEffect(() => {
+    const id = localStorage.getItem("id");
+    const email = localStorage.getItem("email");
+    const nome = localStorage.getItem("nome");
+    const token = localStorage.getItem("token");
+
+    setId(id);
+    setEmail(email);
+    setNome(nome);
+    setToken(token);
+ 
+  }, []);
 
   const handleNav = () => {
     setNav(!nav);
@@ -43,6 +62,13 @@ export const SideBar = () => {
     const arrowQuarks = document.getElementById("iconAbreQuarks");
     menuQuarks.classList.toggle("hidden");
   };
+
+  //get user name from local storage
+
+  function handleLogout() {
+    localStorage.clear();
+    window.location.reload();
+  }
 
   return (
     <div>
@@ -356,18 +382,14 @@ export const SideBar = () => {
             id="menuQuarks"
             className="flex flex-col justify-start items-start space-y-4 w-full"
           >
-          
-             <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
-  
+            <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
               <p className="text-sm leading-5  ">Criar Quark</p>
             </button>
 
-
             <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
-        
               <p className="text-sm leading-5  ">Entrar num Quark</p>
             </button>
-           
+
             <button
               id="dropdownUsersButton"
               data-dropdown-toggle="dropdownUsers"
@@ -418,7 +440,10 @@ export const SideBar = () => {
               <div>
                 <img
                   className="rounded-full"
-                  src="https://i.ibb.co/L1LQtBm/Ellipse-1.png"
+                  src={  `https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                      id + email + nome
+                    }`
+                  }
                   alt="avatar"
                   width={40}
                   height={40}
@@ -426,10 +451,10 @@ export const SideBar = () => {
               </div>
               <div className="flex justify-start flex-col items-start">
                 <p className="cursor-pointer text-sm leading-5 text-white">
-                  Alexis Enache
+                  {nome}
                 </p>
                 <p className="cursor-pointer text-xs leading-3 text-gray-300">
-                  alexis81@gmail.com
+                  {email}
                 </p>
               </div>
             </div>

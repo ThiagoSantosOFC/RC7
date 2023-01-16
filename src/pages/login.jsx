@@ -40,6 +40,8 @@ const handleSubmit = async (e) => {
         localStorage.setItem("nome", JSON.stringify(data.nome));
         //set user id
         localStorage.setItem("id", data.id);
+        //set user email
+        localStorage.setItem("email", data.email);
         router.push("/chat");
     }
 
