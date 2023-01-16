@@ -97,6 +97,7 @@
                 // Update user with tag
                 $sql = "UPDATE User SET Email = '$email', Password = '$password', Nome = '$nome', Token = '$newToken', Tag = '$tag' WHERE Token = '$token'";
             }
+            
             else {
                 // Generate a new random tag
                 $tag = rand(1000, 9999);
