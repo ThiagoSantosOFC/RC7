@@ -21,6 +21,9 @@ export const SideBar = () => {
     setId(id);
     setEmail(email);
     setNome(nome);
+    //remove "" from nome
+    setNome(nome.replace(/['"]+/g, ""));
+
     setToken(token);
  
   }, []);
@@ -67,22 +70,31 @@ export const SideBar = () => {
 
   function handleLogout() {
     localStorage.clear();
-    window.location.reload();
+    window.location.href = "/";
+
   }
 
   return (
-    <div>
+    <div className="flex row  ">
+      
+  
+
       <div className="rounded-r bg-gray-900 xl:hidden flex justify-between w-full p-6 items-center ">
+      
         <div className="flex justify-between  items-center space-x-3">
+         
           <Image
             src="/assets/logo Quark.svg"
             width={50}
             height={50}
             alt="logo"
+            
           />
-
-          <p className="text-2xl leading-6 text-white">QuarkChat</p>
+            
+            <Link href="/">
+          <p className="text-2xl leading-6 text-white">QuarkChat</p></Link>
         </div>
+        
         <div aria-label="toggler" className="flex justify-center items-center">
           <button
             aria-label="open"
@@ -434,6 +446,7 @@ export const SideBar = () => {
               </ul>
             </div>
           </div>
+        
 
           <div className=" flex justify-between items-center w-full">
             <div className="flex justify-center items-center  space-x-2">
@@ -481,9 +494,53 @@ export const SideBar = () => {
                 strokeLinejoin="round"
               />
             </svg>
+          
+ 
           </div>
+          <div className="flex flex-col justify-start items-start space-y-2  mt- w-full">
+          <button onClick={handleLogout} className="cursor-pointer">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M17 12H8"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12 17L8 12L12 7"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M2 12H22"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <p className = "text-xs text-white">Logout</p>
+
+              </button>
+          </div>
+            
+   
         </div>
       </div>
+      <div className=" flex flex-col justify-center items-center w-full fixed top-10 border-spacing-2 ">
+       
+        <p className="text-2xl leading-6 text-white">QuarkChat</p>
+          
+        </div>
     </div>
   );
 };
