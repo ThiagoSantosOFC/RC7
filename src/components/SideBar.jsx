@@ -167,14 +167,14 @@ console.log(quarks);
 
 //render quarks
 
-const renderQuarks = quarks.map(({servers, id}) => {
+const renderQuarks = quarks.map(({idunique, name,id}) => {
   return (
     <div
       className="flex flex-col w-full h-full p-2 rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
       key={id}
     >
       <div className="flex flex-row justify-between items-center">
-     <p >{servers} </p>
+     <p >{name} </p>
    </div>
    </div>
   )})
