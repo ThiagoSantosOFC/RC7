@@ -1,5 +1,4 @@
 <?php
-
     // Connection for db
     $servername = "localhost";
     $username = "root";

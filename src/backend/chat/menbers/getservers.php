@@ -36,10 +36,7 @@
     token: string
 
     Return json model
-    [
-        "status": "string",
-        "message": "string",
-        "servers": [
+        [
             {
                 "id": "int",
                 "name": "string",
@@ -47,7 +44,6 @@
                 "owner": "int"
             }
         ]
-    ]
     */
 
     // Get connection
@@ -145,10 +141,6 @@
 
     // Return servers
     http_response_code(200);
-    echo json_encode(array(
-        "status" => "success",
-        "message" => "Servers found",
-        "servers" => $servers
-    ));
+    echo json_encode($servers);
     die();
 ?>
