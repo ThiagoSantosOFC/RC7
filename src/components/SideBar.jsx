@@ -12,7 +12,7 @@ export const SideBar = () => {
   const [error, setError] = useState("");
   const [tag, setTag] = useState("");
   const [quarks, setQuarks] = useState([]);
-  
+
   useEffect(() => {
     const id = localStorage.getItem("id");
     const email = localStorage.getItem("email");
@@ -22,7 +22,7 @@ export const SideBar = () => {
     setId(id);
     setEmail(email);
     setNome(nome);
-    
+
     //remove "" from nome
     setNome(nome.replace(/['"]+/g, ""));
     setTag(tag);
@@ -93,7 +93,7 @@ export const SideBar = () => {
   function handleInviteUser() {
     const amigoId = document.getElementById("userTag").value;
     const inviteUsers = document.getElementById("inviteUser");
-    
+
     inviteUsers.classList.add("hidden");
     fetch("", {
       method: "POST",
@@ -108,7 +108,6 @@ export const SideBar = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        
       })
 
       .catch((err) => {
@@ -116,15 +115,13 @@ export const SideBar = () => {
       });
   }
 
-
   function gotoSettings() {
     window.location.href = "/settings";
   }
 
-function gotoCreateQuark() {
-  window.location.href = "/createquark";
-}
-
+  function gotoCreateQuark() {
+    window.location.href = "/createquark";
+  }
 
   function listUsers() {
     //list users
@@ -148,36 +145,80 @@ function gotoCreateQuark() {
   }
 
 
-  function listQuarks() {
+ const  listQuarks = () => {
     //list quarks
     //abd theb fecth to `http://localhost/backend/chat/menbers/getservers.php?token=${token}`
-    const [quarks, setQuarks] = useState({});
-
+  
+    const [quarks, setQuarks] = useState([]);
     useEffect(() => {
-      //get token from local storage
-      const token = localStorage.getItem("token");
+    //get token from local storage
+    const token = localStorage.getItem("token");
       fetch(`http://localhost/backend/chat/menbers/getservers.php?token=${token}`, {
         method: "GET",
-        headers: {
-          
-        },
+     
       })
         .then((res) => res.json())
         .then((data) => {
-          setQuarks(data);
-          console.log(data);
-        
-  
+          setQuarks(data.servers);
+          //put quarks in local storage
+          localStorage.setItem("quarks", JSON.stringify(data.servers));
+
+
         })
         .catch((err) => {
           setError(err);
         });
-    }, []);
-  } 
+    }
 
-listQuarks();
+    , []);
+    
 
-  function sendDm () {
+ }
+
+ listQuarks()
+
+ //getQuarks from local storage
+ const getQuarks = () => {
+useEffect(() => {
+  const quarks = localStorage.getItem("quarks");
+  setQuarks(quarks);
+  console.log(quarks);
+}, [])
+ }
+
+  getQuarks()
+
+  //render quarks
+  const renderQuarks = () => {
+    //get quarks from local storage
+    useEffect(() => {
+    const quarks = localStorage.getItem("quarks");
+  
+
+    //turn quarks into an array
+    const quarksArray = JSON.parse(quarks);
+    //map through quarks array
+    quarksArray.map((quark) => {
+      return (
+        <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-row items-center">
+        
+            <p className="ml-2">{quark.nome}</p>
+          </div>
+   
+        </div>
+      );
+    }
+    )
+  }, [])
+  };
+
+
+
+
+
+
+  function sendDm() {
     //function to send dm
     const [dm, setDm] = useState([]);
     const [error, setError] = useState("");
@@ -187,10 +228,8 @@ listQuarks();
     const [data, setData] = useState("");
     const [hora, setHora] = useState("");
     const [quark, setQuark] = useState("");
-    
+
     const [amigoNome, setAmigoNome] = useState("");
-
-
 
     const token = localStorage.getItem("token");
     const id = localStorage.getItem("id");
@@ -198,16 +237,12 @@ listQuarks();
     const email = localStorage.getItem("email");
 
     //amigo is a object that contais amigoID, amigoNome, amigoEmail
-   
+
     const amigo = {
       amigoId: amigoId,
       amigoNome: amigoNome,
-      amigoEmail: amigoEmail
-    }
-
-
-
-
+      amigoEmail: amigoEmail,
+    };
 
     const handleDm = (e) => {
       e.preventDefault();
@@ -223,7 +258,6 @@ listQuarks();
           data: data,
           hora: hora,
           amigo: amigo,
-         
         }),
       })
         .then((res) => res.json())
@@ -233,12 +267,13 @@ listQuarks();
         .catch((err) => {
           setError(err);
         });
-    }
-
+    };
   }
 
- //function create Quark
- 
+
+
+  //function create Quark
+
   return (
     <div className="flex flex-row min-h-full min-w-full  ">
       <div className="rounded-r  bg-gray-900 xl:hidden flex justify-between w-full p-6 items-center ">
@@ -425,7 +460,7 @@ listQuarks();
                 >
                   <div className="flex justify-center items-center h-full">
                     <div className="bg-gray-900 rounded shadow-lg w-96">
-                      <div className="border-b px-4 py-2 flex justify-between items-center">                      
+                      <div className="border-b px-4 py-2 flex justify-between items-center">
                         <input
                           id="userTag"
                           type="text"
@@ -436,21 +471,18 @@ listQuarks();
                           onClick={handleInviteUser}
                           className="text-gray-300 hover:text-gray-100 focus:outline-none focus:text-gray-100"
                         >
-                        
-                            <svg 
-                              width="24" 
-                              height="24" 
-                              viewBox="0 0 24 24" 
-                              fill="none" 
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path 
-                                d="M21 12H12V21H10V12H1V10H10V1H12V10H21V12Z" 
-                                fill="currentColor"
-                              />
-                            </svg>
-
-
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M21 12H12V21H10V12H1V10H10V1H12V10H21V12Z"
+                              fill="currentColor"
+                            />
+                          </svg>
                         </button>
                       </div>
                     </div>
@@ -459,8 +491,10 @@ listQuarks();
               </div>
             </div>
 
-          
-            <button onClick={gotoSettings} className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2 w-full md:w-52">
+            <button
+              onClick={gotoSettings}
+              className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2 w-full md:w-52"
+            >
               <svg
                 width="24"
                 height="24"
@@ -590,28 +624,28 @@ listQuarks();
               id="menuQuarks"
               className="flex flex-col justify-start items-start  w-75%"
             >
-              <button onClick={gotoCreateQuark} className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
+              <button
+                onClick={gotoCreateQuark}
+                className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52"
+              >
                 <p className="text-sm leading-5  ">Criar Quark</p>
               </button>
 
-              <button onClick={gotoJoinQuark} className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
+              <button
+                onClick={gotoJoinQuark}
+                className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52"
+              >
                 <p className="text-sm leading-5  ">Entrar num Quark</p>
               </button>
             </div>
             <div className="flex flex-col justify-start items-start  w-75%">
-              
-              {quarks.map((quark) => (
-                <button
-                  onClick={() => gotoQuark(quark.id)}
-                  key={quark.id}
-                  className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52"
-                 
-                />
-              ))}
-
-              
-        
-              </div>
+             {
+             
+             renderQuarks()
+             
+              }
+            
+            </div>
           </div>
         </div>
 
@@ -631,7 +665,7 @@ listQuarks();
               </div>
               <div className="flex justify-start flex-col items-start">
                 <p className="cursor-pointer text-sm leading-5 text-white">
-                  {nome + "#"+ tag}
+                  {nome + "#" + tag}
                 </p>
                 <p className="cursor-pointer text-xs leading-3 text-gray-300">
                   {email}
@@ -639,7 +673,7 @@ listQuarks();
               </div>
             </div>
             <svg
-            onClick={gotoSettings}
+              onClick={gotoSettings}
               className="cursor-pointer"
               width="24"
               height="24"
@@ -701,8 +735,7 @@ listQuarks();
         </div>
       </div>
 
-
-      <div  id="chat" className=" flex-auto hidden  space-x-1">
+      <div id="chat" className=" flex-auto hidden  space-x-1">
         <div className="flex-1 p:2 sm:p-6 justify-between flex flex-col w-85% h-screen">
           <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
             <div className="relative flex items-center space-x-4">

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const register = () => {
 const [email, setEmail] = useState("");
