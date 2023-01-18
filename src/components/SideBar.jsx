@@ -11,7 +11,7 @@ export const SideBar = () => {
   const [token, setToken] = useState("");
   const [error, setError] = useState("");
   const [tag, setTag] = useState("");
-  const [quarks, setQuarks] = useState([]);
+  const [quarks, setQuarks] = useState([{}]);
 
   useEffect(() => {
     const id = localStorage.getItem("id");
@@ -145,76 +145,39 @@ export const SideBar = () => {
   }
 
 
- const  listQuarks = () => {
-    //list quarks
-    //abd theb fecth to `http://localhost/backend/chat/menbers/getservers.php?token=${token}`
-  
-    const [quarks, setQuarks] = useState([]);
-    useEffect(() => {
+  // getAll quarks then render it
+  useEffect(() => {
     //get token from local storage
     const token = localStorage.getItem("token");
-      fetch(`http://localhost/backend/chat/menbers/getservers.php?token=${token}`, {
-        method: "GET",
-     
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setQuarks(data.servers);
-          //put quarks in local storage
-          localStorage.setItem("quarks", JSON.stringify(data.servers));
-
-
-        })
-        .catch((err) => {
-          setError(err);
-        });
-    }
-
-    , []);
-    
-
- }
-
- listQuarks()
-
- //getQuarks from local storage
- const getQuarks = () => {
-useEffect(() => {
-  const quarks = localStorage.getItem("quarks");
-  setQuarks(quarks);
-  console.log(quarks);
-}, [])
- }
-
-  getQuarks()
-
-  //render quarks
-  const renderQuarks = () => {
-    //get quarks from local storage
-    useEffect(() => {
-    const quarks = localStorage.getItem("quarks");
-  
-
-    //turn quarks into an array
-    const quarksArray = JSON.parse(quarks);
-    //map through quarks array
-    quarksArray.map((quark) => {
-      return (
-        <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center">
-        
-            <p className="ml-2">{quark.nome}</p>
-          </div>
+    fetch(`http://localhost/backend/chat/menbers/getservers.php?token=${token}`, {
+      method: "GET",
    
-        </div>
-      );
-    }
-    )
-  }, [])
-  };
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setQuarks(data.servers);
+      })
+      .catch((err) => {
+        setError(err);
+      });
+  }
+  , []);
 
+console.log(quarks);
 
+//render quarks
 
+const renderQuarks = quarks.map(({servers, id}) => {
+  return (
+    <div
+      className="flex flex-col w-full h-full p-2 rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
+      key={id}
+    >
+      <div className="flex flex-row justify-between items-center">
+     <p >{servers} </p>
+   </div>
+   </div>
+  )})
 
 
 
@@ -641,8 +604,7 @@ useEffect(() => {
             <div className="flex flex-col justify-start items-start  w-75%">
              {
              
-             renderQuarks()
-             
+             renderQuarks
               }
             
             </div>
