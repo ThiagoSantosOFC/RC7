@@ -144,15 +144,16 @@ export const SideBar = () => {
     }, []);
   }
 
-
   // getAll quarks then render it
   useEffect(() => {
     //get token from local storage
     const token = localStorage.getItem("token");
-    fetch(`http://localhost/backend/chat/menbers/getservers.php?token=${token}`, {
-      method: "GET",
-   
-    })
+    fetch(
+      `http://localhost/backend/chat/menbers/getservers.php?token=${token}`,
+      {
+        method: "GET",
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         setQuarks(data.servers);
@@ -160,26 +161,26 @@ export const SideBar = () => {
       .catch((err) => {
         setError(err);
       });
-  }
-  , []);
+  }, []);
 
-console.log(quarks);
+  console.log(quarks);
 
-//render quarks
+  //render quarks
 
-const renderQuarks = quarks.map(({idunique, name,id}) => {
-  return (
-    <div
-      className="flex flex-col w-full h-full p-2 rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
-      key={id}
-    >
-      <div className="flex flex-row justify-between items-center">
-     <p >{name} </p>
-   </div>
-   </div>
-  )})
+  const renderQuarks = quarks.map(({ idunique, name, id }) => {
+    return (
+      <div
+        className="flex flex-col w-full h-full p-2 rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
+        key={idunique}
+      >
+        <div className="flex flex-row justify-between items-center">
+          <p>{name} </p>
+        </div>
+      </div>
+    );
+  });
 
-
+//function to open the quark
 
   function sendDm() {
     //function to send dm
@@ -232,8 +233,6 @@ const renderQuarks = quarks.map(({idunique, name,id}) => {
         });
     };
   }
-
-
 
   //function create Quark
 
@@ -600,13 +599,9 @@ const renderQuarks = quarks.map(({idunique, name,id}) => {
               >
                 <p className="text-sm leading-5  ">Entrar num Quark</p>
               </button>
-            </div>
-            <div className="flex flex-col justify-start items-start  w-75%">
-             {
-             
-             renderQuarks
-              }
-            
+              <div className="flex flex-col justify-start items-start  w-75%">
+                {renderQuarks}
+              </div>
             </div>
           </div>
         </div>
