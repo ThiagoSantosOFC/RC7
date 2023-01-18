@@ -36,10 +36,7 @@
     token: string
 
     Return json model
-    [
-        "status": "string",
-        "message": "string",
-        "servers": [
+        [
             {
                 "id": "int",
                 "name": "string",
@@ -47,7 +44,6 @@
                 "owner": "int"
             }
         ]
-    ]
     */
 
     // Get connection
