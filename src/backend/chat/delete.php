@@ -59,8 +59,6 @@
         exit();
     }
 
-    name
-
     // Get owner data
     $sql = "SELECT id, Token FROM User WHERE Token = '$owner_token'";
     $result = $conn->query($sql);
