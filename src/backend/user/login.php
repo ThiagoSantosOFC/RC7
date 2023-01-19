@@ -18,6 +18,8 @@
     if match return all user data exept by password hash
     else return error
 
+    Login user
+    endpoint: /backend/user/login.php
 
     json post model:
     {

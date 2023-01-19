@@ -10,6 +10,9 @@
         FOREIGN KEY (owner) REFERENCES User(id)
     ) ENGINE=INNODB;
 
+    Update chat
+    endpoint: /backend/chat/update.php
+    
     json post model:
     {
         "id_unique": "string",

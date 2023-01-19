@@ -55,6 +55,9 @@
             FOREIGN KEY (chatId) REFERENCES Chat(id)
         ) ENGINE=INNODB;
 
+        Create the mensage for specfict chat
+        endpoint: /backend/chat/message/create.php
+
         json post model:
         {
             "chat_idunique": "string",

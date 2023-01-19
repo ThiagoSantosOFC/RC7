@@ -52,6 +52,8 @@
 
         The messages return Is every from the oldest ones to newest ones.
 
+        endpoint: /backend/chat/messages/get.php
+
         Json return for errors:
         {
             "status": "error",

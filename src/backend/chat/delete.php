@@ -11,6 +11,8 @@
         FOREIGN KEY (owner) REFERENCES User(id)
     ) ENGINE=INNODB;
 
+    Delete chat
+    endpoint: /backend/chat/delete.php
 
     json post model:
     {

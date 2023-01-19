@@ -32,6 +32,7 @@
     ) ENGINE=INNODB;";
 
     Get direct message
+    endpoint: /backend/user/friend/direct/get.php
 
     Method GET
 

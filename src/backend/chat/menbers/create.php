@@ -11,6 +11,9 @@
         FOREIGN KEY (user) REFERENCES User(id)
     ) ENGINE=INNODB;
 
+    Create a new menber in a chat
+    endpoint: /backend/chat/menbers/create.php
+    
     json post model:
     {
         "chat_idunique": "string",

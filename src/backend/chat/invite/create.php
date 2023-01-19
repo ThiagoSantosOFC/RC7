@@ -29,6 +29,8 @@
         FOREIGN KEY (owner) REFERENCES User(id)
     ) ENGINE=INNODB;
 
+    Create the invite link for join the server
+    endpoint: /backend/chat/invite/create.php
 
     Json post:
     {

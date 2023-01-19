@@ -22,7 +22,8 @@
         FOREIGN KEY (friend) REFERENCES User(id)
     ) ENGINE=INNODB;
 
-    DELETE FRIEND
+    Delete frient
+    endpoint: /backend/user/friend/delete.php
 
     json model
     {

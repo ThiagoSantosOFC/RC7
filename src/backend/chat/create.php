@@ -30,6 +30,9 @@
         FOREIGN KEY (user) REFERENCES User(id)
     ) ENGINE=INNODB;
 
+    Create chat
+    endpoint: /backend/chat/create.php
+
     json post model:
     {
         "name": "string",

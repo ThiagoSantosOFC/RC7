@@ -32,6 +32,8 @@
 
     THIS IS A GET METHOD
 
+    endpoint: /backend/chat/menbers/getservers.php
+
     Params:
     token: string
 

@@ -32,6 +32,7 @@
     ) ENGINE=INNODB;";
     
     Create direct message
+    endpoint: /backend/user/friend/direct/create.php
 
     Method post
     Body JSON

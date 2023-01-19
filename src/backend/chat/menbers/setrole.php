@@ -41,6 +41,8 @@
     if not exists return error
     if exists update the role of user
 
+    endpoint: /backend/chat/menbers/setrole.php
+
     Post model
     {
         "token": "string", <- owner token
