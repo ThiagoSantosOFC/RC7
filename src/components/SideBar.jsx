@@ -81,53 +81,10 @@ export const SideBar = () => {
     dropdownUsers.classList.toggle("hidden");
   };
 
-  //get all users
-  useEffect(() => {
-    //get token from local storage
 
-    fetch("http://localhost/backend/user/get.php", {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setFriends(data.user);
-      })
-      .catch((err) => {
-        setError(err);
-      });
-  }, []);
 
-  console.log(friends);
-  //render friends inside id="dropdownUsersList"
 
-  const renderFriends = friends.map(({ id, Nome, Email, tag }) => {
-    return (
-      <div
-        className="flex flex-row items-center justify-between w-full h-full p-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700"
-        key={id}
-      >
-        <div className="flex flex-row items-center">
-          <div className="flex flex-row items-center justify-center w-12 h-12 mr-2 rounded-full bg-gray-300 dark:bg-gray-700">
-            <img
-              className="rounded-full"
-              src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
-                id + Email + Nome
-              }`}
-              alt="avatar"
-              width={40}
-              height={40}
-            />
-          </div>
-          <div className="flex flex-col">
-            <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-              {Nome + "#" + tag}
-            </p>
-          </div>
-        </div>
-      </div>
 
-    );
-  });
 
   const gotoJoinQuark = () => {
     window.location.href = "/joinquark";
@@ -153,6 +110,10 @@ export const SideBar = () => {
 
   //get all user friends
 
+  useEffect(() => {
+    //get token from local storage
+    
+
   // getAll quarks then render it
   useEffect(() => {
     //get token from local storage
@@ -165,7 +126,14 @@ export const SideBar = () => {
     )
       .then((res) => res.json())
       .then((data) => {
+        //if no quarks
+        if (!data) {
+          return;
+        } else {
+
+  
         setQuarks(data.servers);
+        }
       })
       .catch((err) => {
         setError(err);
@@ -187,6 +155,7 @@ export const SideBar = () => {
     );
   });
 
+  
   function sendDm() {
     //function to send dm
     const [dm, setDm] = useState([]);
@@ -405,7 +374,7 @@ export const SideBar = () => {
                   className="h-48 py-1 overflow-y-auto  dark:text-gray-200"
                   aria-labelledby="dropdownUsersButton"
                 >
-                  {renderFriends}
+                  
                 </ul>
                 <a
                   onClick={showInviteUsers}
@@ -607,7 +576,18 @@ export const SideBar = () => {
                 <p className="text-sm leading-5  ">Entrar num Quark</p>
               </button>
               <div className="flex flex-col justify-start items-start  w-75%">
-                {renderQuarks}
+           
+                {quarks != 0 ? (
+                 
+                
+                renderQuarks
+                ) : ( //if not, show this
+                  <div className="flex flex-col justify-start items-start  w-75%">  
+                    <p className="text-sm leading-5  ">Não tens quarks</p>
+
+                    </div>
+                )}
+
               </div>
             </div>
           </div>
