@@ -88,11 +88,28 @@
         exit();
     }
 
-    // Get user
-    $user = $result->fetch_assoc();
+    /*
+    If nothing has passed it means the client want all users
+    validate if nothing passed if true return an array if not return an object
+    */
+
+    // Create array
+    $users = array();
+
+    // Verify if nothing passed
+    if (empty($token) && empty($email) && empty($id) && empty($user_tag)) {
+        // Fetch all users
+        while ($row = $result->fetch_assoc()) {
+            // Add user to array
+            array_push($users, $row);
+        }
+    } else {
+        // Fetch user
+        $users = $result->fetch_assoc();
+    }
 
     // Return success
-    $json = array("status" => "success", "user" => $user);
+    $json = array("status" => "success", "user" => $users);
     echo json_encode($json);
     exit();
 ?>
