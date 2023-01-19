@@ -123,7 +123,7 @@ export const SideBar = () => {
           return;
         } else {
           setFriends(data.user);
-          console.log(friends);
+          
         }
       })
       .catch((err) => {
@@ -153,9 +153,7 @@ export const SideBar = () => {
      
    setAmigoNome(amigoData[0]);
     setAmigoTag(amigoData[1]);
-    console .log(amigoNome);
-    console.log(amigoTag);
-     
+
       //get friend name
 
     } else {
@@ -175,13 +173,16 @@ export const SideBar = () => {
         key={id}
         id="dados"
       >
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row items-center">
+        <div onClick={handleDm} className="flex flex-row justify-between items-center">
+          
+          <div onClick={handleDm} className="flex flex-row items-center">
             <img
+            
               src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
                  Nome+tag 
               }`}
               alt="user"
+              
               width={40}
               height={40}
               className="rounded-full"
@@ -616,7 +617,7 @@ export const SideBar = () => {
                   renderQuarks
                 ) : (
                   //if not, show this
-                  <div className="flex flex-col justify-start items-start  w-75%">
+                  <div className="flex flex-col justify-start items-start  w-100%">
                     <p className="text-sm leading-5  ">Não tens quarks</p>
                   </div>
                 )}
@@ -711,7 +712,7 @@ export const SideBar = () => {
         </div>
       </div>
 
-      <div id="chat" className=" flex-auto hidden  space-x-1">
+      <div id="chat" className=" flex-auto hidden text-gray-200 space-x-1">
         <div className="flex-1 p:2 sm:p-6 justify-between flex flex-col w-85% h-screen">
           <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
             <div className="relative flex items-center space-x-4">
@@ -731,7 +732,7 @@ export const SideBar = () => {
               </div>
               <div className="flex flex-col leading-tight">
                 <div className="text-2xl mt-1 flex items-center">
-                  <span className="text-gray-700 mr-3"> {amigoNome +"#"+amigoTag}</span>
+                  <span className="text-gray-200 mr-3"> {amigoNome +"#"+amigoTag}</span>
                 </div>
                 <span className="text-lg text-gray-600"></span>
               </div>
