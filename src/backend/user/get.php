@@ -56,17 +56,13 @@
     $user_tag = $_GET["user_tag"] ?? '';
     $nome = $_GET["nome"] ?? '';
 
-    // Verify if token is empty
-    if (empty($token) && empty($email) && empty($id) && empty($user_tag) && empty($nome)) {
-        // Return error
-        $json = array("status" => "error", "error" => "No data to search");
-        echo json_encode($json);
-        exit();
-    }
-
     // Create sql query
-    $sql = "SELECT * FROM User WHERE ";
+    $sql = "SELECT * FROM User ";
 
+    // Verify if something is not empty
+    if (!empty($token) || !empty($email) || !empty($id) || !empty($user_tag)) {
+        $sql .= "WHERE ";
+    }
     // Verify if token is not empty
     if (!empty($token)) {
         $sql .= "Token = '$token'";
