@@ -33,5 +33,77 @@
     
     Create direct message
 
+    Method post
+    Body JSON
+    {
+        "token": string,
+        "friend": int,
+        "message": "Hello"
+    }
+
+    Return:
+    {
+        "status": "ok",
+        "message": "Message sent"
+    }
+
+    Return:
+    {
+        "status": "error",
+        "message": "Message not sent"
+    }
+
     */
 
+    // Get connection
+    require_once '../../../conn.php';
+
+    // Check if method is post
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo json_encode(array("status" => "error", "message" => "Method not allowed"));
+        exit();
+    }
+
+    // Get json data
+    $json = file_get_contents('php://input');
+
+    // Decode json
+    $data = json_decode($json);
+
+    // Get token
+    $token = $data->token;
+
+    // Get friend
+    $friend = $data->friend;
+
+    // Get message
+    $message = $data->message;
+
+    // Get user
+    $user = $conn->query("SELECT * FROM User WHERE Token = '$token'");
+
+    // Check if user exist
+    if ($user->num_rows == 0) {
+        echo json_encode(array("status" => "error", "message" => "Token invalid"));
+        exit();
+    }
+
+    // Get user
+    $user = $user->fetch_assoc();
+
+    // Get id from user
+    $id = $user['id'];
+
+    // Create direct message
+    $sql = "INSERT INTO DirectMessage (user, friend, message) VALUES ($id, $friend, '$message')";
+
+    // Check if message was sent
+    if ($conn->query($sql)) {
+        echo json_encode(array("status" => "ok", "message" => "Message sent"));
+    } else {
+        echo json_encode(array("status" => "error", "message" => "Message not sent"));
+    }
+
+    // Close connection
+    $conn->close();
+?>
