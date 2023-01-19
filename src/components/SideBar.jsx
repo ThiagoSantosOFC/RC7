@@ -13,6 +13,10 @@ export const SideBar = () => {
   const [tag, setTag] = useState("");
   const [quarks, setQuarks] = useState([{}]);
   const [friends, setFriends] = useState([{}]);
+  const [messages, setMessages] = useState([{}]);
+  const [amigoId , setAmigoId] = useState("");
+  const [amigoNome , setAmigoNome] = useState("");
+  
 
   useEffect(() => {
     const id = localStorage.getItem("id");
@@ -81,11 +85,6 @@ export const SideBar = () => {
     dropdownUsers.classList.toggle("hidden");
   };
 
-
-
-
-
-
   const gotoJoinQuark = () => {
     window.location.href = "/joinquark";
   };
@@ -111,8 +110,68 @@ export const SideBar = () => {
   //get all user friends
 
   useEffect(() => {
-    //get token from local storage
+    fetch("http://localhost/backend/user/get.php", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        //if no friends
+        if (!data) {
+          return;
+        } else {
+          setFriends(data.user);
+          console.log(friends);
+        }
+      })
+      .catch((err) => {
+        setError(err);
+      });
+  }, []);
+
+  //render friends
+
+ const handleDm = () => {
+    //get chat element by id then show it with friend info
+    const chat = document.getElementById("chat");
+    if (chat.classList.contains("hidden")) {
+      chat.classList.remove("hidden");
+    } else {
+      chat.classList.add("hidden");
+    }
     
+
+    
+ }
+
+  const renderFriends = friends.map(({ id, Nome, tag }) => {
+    //remove user from friends list
+
+    return (
+      <div
+        className="flex flex-col w-full h-full p-2 rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
+        onClick={handleDm}
+        key={id}
+      >
+       
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex flex-row items-center">
+            <img
+              src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                id + email + nome
+              }`}
+              alt="user"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+            <p className="px-2 text-lg">{Nome + "#" + tag}</p>
+          </div>
+        </div>
+      </div>
+    );
+  });
+
+
 
   // getAll quarks then render it
   useEffect(() => {
@@ -130,9 +189,7 @@ export const SideBar = () => {
         if (!data) {
           return;
         } else {
-
-  
-        setQuarks(data.servers);
+          setQuarks(data.servers);
         }
       })
       .catch((err) => {
@@ -155,7 +212,6 @@ export const SideBar = () => {
     );
   });
 
-  
   function sendDm() {
     //function to send dm
     const [dm, setDm] = useState([]);
@@ -374,7 +430,7 @@ export const SideBar = () => {
                   className="h-48 py-1 overflow-y-auto  dark:text-gray-200"
                   aria-labelledby="dropdownUsersButton"
                 >
-                  
+                  <li>{renderFriends}</li>
                 </ul>
                 <a
                   onClick={showInviteUsers}
@@ -576,18 +632,14 @@ export const SideBar = () => {
                 <p className="text-sm leading-5  ">Entrar num Quark</p>
               </button>
               <div className="flex flex-col justify-start items-start  w-75%">
-           
                 {quarks != 0 ? (
-                 
-                
-                renderQuarks
-                ) : ( //if not, show this
-                  <div className="flex flex-col justify-start items-start  w-75%">  
+                  renderQuarks
+                ) : (
+                  //if not, show this
+                  <div className="flex flex-col justify-start items-start  w-75%">
                     <p className="text-sm leading-5  ">Não tens quarks</p>
-
-                    </div>
+                  </div>
                 )}
-
               </div>
             </div>
           </div>
@@ -690,7 +742,9 @@ export const SideBar = () => {
                   </svg>
                 </span>
                 <img
-                  src=""
+                       src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                        id + email + nome
+                      }`}
                   alt="/"
                   className="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
                 />
