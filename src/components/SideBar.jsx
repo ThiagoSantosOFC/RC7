@@ -12,6 +12,7 @@ export const SideBar = () => {
   const [error, setError] = useState("");
   const [tag, setTag] = useState("");
   const [quarks, setQuarks] = useState([{}]);
+  const [friends, setFriends] = useState([{}]);
 
   useEffect(() => {
     const id = localStorage.getItem("id");
@@ -80,6 +81,54 @@ export const SideBar = () => {
     dropdownUsers.classList.toggle("hidden");
   };
 
+  //get all users
+  useEffect(() => {
+    //get token from local storage
+
+    fetch("http://localhost/backend/user/get.php", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setFriends(data.user);
+      })
+      .catch((err) => {
+        setError(err);
+      });
+  }, []);
+
+  console.log(friends);
+  //render friends inside id="dropdownUsersList"
+
+  const renderFriends = friends.map(({ id, Nome, Email, tag }) => {
+    return (
+      <div
+        className="flex flex-row items-center justify-between w-full h-full p-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700"
+        key={id}
+      >
+        <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center justify-center w-12 h-12 mr-2 rounded-full bg-gray-300 dark:bg-gray-700">
+            <img
+              className="rounded-full"
+              src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                id + Email + Nome
+              }`}
+              alt="avatar"
+              width={40}
+              height={40}
+            />
+          </div>
+          <div className="flex flex-col">
+            <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+              {Nome + "#" + tag}
+            </p>
+          </div>
+        </div>
+      </div>
+
+    );
+  });
+
   const gotoJoinQuark = () => {
     window.location.href = "/joinquark";
   };
@@ -91,28 +140,7 @@ export const SideBar = () => {
   };
 
   function handleInviteUser() {
-    const amigoId = document.getElementById("userTag").value;
-    const inviteUsers = document.getElementById("inviteUser");
-
-    inviteUsers.classList.add("hidden");
-    fetch("", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        amigoId: amigoId,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      })
-
-      .catch((err) => {
-        setError(err);
-      });
+    console.log("invite user");
   }
 
   function gotoSettings() {
@@ -123,26 +151,7 @@ export const SideBar = () => {
     window.location.href = "/createquark";
   }
 
-  function listUsers() {
-    //list users
-    const [users, setUsers] = useState([]);
-    useEffect(() => {
-      fetch("", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setUsers(data);
-        })
-        .catch((err) => {
-          setError(err);
-        });
-    }, []);
-  }
+  //get all user friends
 
   // getAll quarks then render it
   useEffect(() => {
@@ -163,8 +172,6 @@ export const SideBar = () => {
       });
   }, []);
 
-  console.log(quarks);
-
   //render quarks
 
   const renderQuarks = quarks.map(({ idunique, name, id }) => {
@@ -179,8 +186,6 @@ export const SideBar = () => {
       </div>
     );
   });
-
-//function to open the quark
 
   function sendDm() {
     //function to send dm
@@ -399,7 +404,9 @@ export const SideBar = () => {
                   id="dropdownUsersList"
                   className="h-48 py-1 overflow-y-auto  dark:text-gray-200"
                   aria-labelledby="dropdownUsersButton"
-                ></ul>
+                >
+                  {renderFriends}
+                </ul>
                 <a
                   onClick={showInviteUsers}
                   className="flex items-center p-3 text-sm font-medium text-blue-600 border-t border-gray-200 bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
@@ -424,9 +431,9 @@ export const SideBar = () => {
                     <div className="bg-gray-900 rounded shadow-lg w-96">
                       <div className="border-b px-4 py-2 flex justify-between items-center">
                         <input
-                          id="userTag"
+                          id="userAdd"
                           type="text"
-                          placeholder="Digite a Tag do amigo"
+                          placeholder="amigo#1234"
                           className="bg-gray-800 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                         />
                         <button
