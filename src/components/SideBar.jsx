@@ -14,11 +14,11 @@ export const SideBar = () => {
   const [quarks, setQuarks] = useState([{}]);
   const [friends, setFriends] = useState([{}]);
   const [messages, setMessages] = useState([{}]);
-  //amigo nome and amigoid and amigo email are an array
 
+  const [message, setMessage] = useState("");
 
   const [amigoNome, setAmigoNome] = useState("");
-
+  const [amigoId, setAmigoId] = useState("");
   const [amigoTag, setAmigoTag] = useState("");
 
   useEffect(() => {
@@ -123,7 +123,6 @@ export const SideBar = () => {
           return;
         } else {
           setFriends(data.user);
-          
         }
       })
       .catch((err) => {
@@ -137,33 +136,43 @@ export const SideBar = () => {
     return friend.id !== id;
   });
 
-  //run friends array and get friend name and id and email then put it into local storage
+  //get id from friend
 
+  const pegaid = () => {
+    //run frieds array and get id from friend that matches with tag
+    const idamigo = friends.filter((friend) => {
+      return friend.tag == amigoTag;
+    });
+    let map = idamigo.map(({ id }) => id);
+
+    setAmigoId(map[0]);
+
+    console.log(amigoId);
+  };
 
   const handleDm = (e) => {
     //get chat element by id then show it with friend info
     const chat = document.getElementById("chat");
     if (chat.classList.contains("hidden")) {
       chat.classList.remove("hidden");
+
       //get amigo data from innertext
       const amigo = e.target.innerText;
       //split amigo data into array
       const amigoData = amigo.split("#");
-  
-     
-   setAmigoNome(amigoData[0]);
-    setAmigoTag(amigoData[1]);
+
+      setAmigoNome(amigoData[0]);
+      setAmigoTag(amigoData[1]);
+      pegaid();
 
       //get friend name
-
     } else {
       setAmigoNome("");
       setAmigoTag("");
-      
+      setMessages("");
       chat.classList.add("hidden");
     }
   };
-
 
   const renderFriends = removeMyself.map(({ id, Nome, tag }) => {
     return (
@@ -173,21 +182,21 @@ export const SideBar = () => {
         key={id}
         id="dados"
       >
-        <div onClick={handleDm} className="flex flex-row justify-between items-center">
-          
+        <div
+          onClick={handleDm}
+          className="flex flex-row justify-between items-center"
+        >
           <div onClick={handleDm} className="flex flex-row items-center">
             <img
-            
               src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
-                 Nome+tag 
+                Nome + tag
               }`}
               alt="user"
-              
               width={40}
               height={40}
               className="rounded-full"
             />
-            <p  className="px-1 text-lg">{Nome + "#" + tag}</p>
+            <p className="px-1 text-lg">{Nome + "#" + tag}</p>
           </div>
         </div>
       </div>
@@ -245,7 +254,34 @@ export const SideBar = () => {
 
   const renderQuarks = verificaQuarks();
 
-  function sendDm() {}
+  const handleMessagesChange = (e) => {
+    setMessages(e.target.value);
+  };
+  //const send message
+  const sendMessage = () => {
+    //get token from local storage
+    const token = localStorage.getItem("token");
+
+    fetch("http://localhost/backend/user/friend/direct/create.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: token,
+        friend: amigoId,
+        message: messages,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setMessages("");
+        console.log(data);
+      })
+      .catch((err) => {
+        setError(err);
+      });
+  };
 
   return (
     <div className="flex flex-row min-h-full min-w-full  ">
@@ -413,7 +449,7 @@ export const SideBar = () => {
                 >
                   <li>{renderFriends}</li>
                 </ul>
-                <a 
+                <a
                   onClick={showInviteUsers}
                   className=" hidden items-center p-3 text-sm font-medium text-blue-600 border-t border-gray-200 bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
                 >
@@ -724,7 +760,7 @@ export const SideBar = () => {
                 </span>
                 <img
                   src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
-                     amigoNome + amigoTag 
+                    amigoNome + amigoTag
                   }`}
                   alt="/"
                   className="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
@@ -732,50 +768,16 @@ export const SideBar = () => {
               </div>
               <div className="flex flex-col leading-tight">
                 <div className="text-2xl mt-1 flex items-center">
-                  <span className="text-gray-200 mr-3"> {amigoNome +"#"+amigoTag}</span>
+                  <span className="text-gray-200 mr-3">
+                    {" "}
+                    {amigoNome + "#" + amigoTag}
+                  </span>
                 </div>
                 <span className="text-lg text-gray-600"></span>
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="h-6 w-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  ></path>
-                </svg>
-              </button>
-              <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="h-6 w-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  ></path>
-                </svg>
-              </button>
+
               <button
                 type="button"
                 className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
@@ -805,6 +807,8 @@ export const SideBar = () => {
             <div className="relative flex">
               <span className="absolute inset-y-0 flex items-center"></span>
               <input
+                onChange={handleMessagesChange}
+                id="message"
                 type="text"
                 placeholder="Escreva sua mensagem..."
                 className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
@@ -812,6 +816,7 @@ export const SideBar = () => {
               <div className="absolute right-0 items-center inset-y-0 hidden sm:flex">
                 <button
                   type="button"
+                  onClick={sendMessage}
                   className="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
                 >
                   <span className="font-bold">Enviar</span>

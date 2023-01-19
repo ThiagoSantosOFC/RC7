@@ -96,7 +96,7 @@
     $id = $user['id'];
 
     // Create direct message
-    $sql = "INSERT INTO DirectMessage (user, friend, message) VALUES ($id, $friend, '$message')";
+    $sql = "INSERT INTO directMessage (user, friend, message) VALUES ($id, $friend, '$message')";
 
     // Check if message was sent
     if ($conn->query($sql)) {
