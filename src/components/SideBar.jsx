@@ -14,9 +14,12 @@ export const SideBar = () => {
   const [quarks, setQuarks] = useState([{}]);
   const [friends, setFriends] = useState([{}]);
   const [messages, setMessages] = useState([{}]);
-  const [amigoId , setAmigoId] = useState("");
-  const [amigoNome , setAmigoNome] = useState("");
-  
+  //amigo nome and amigoid and amigo email are an array
+
+
+  const [amigoNome, setAmigoNome] = useState("");
+
+  const [amigoTag, setAmigoTag] = useState("");
 
   useEffect(() => {
     const id = localStorage.getItem("id");
@@ -128,50 +131,67 @@ export const SideBar = () => {
       });
   }, []);
 
-  //render friends
+  //remove myself from friends list
 
- const handleDm = () => {
+  const removeMyself = friends.filter((friend) => {
+    return friend.id !== id;
+  });
+
+  //run friends array and get friend name and id and email then put it into local storage
+
+
+  const handleDm = (e) => {
     //get chat element by id then show it with friend info
     const chat = document.getElementById("chat");
     if (chat.classList.contains("hidden")) {
       chat.classList.remove("hidden");
+      //get amigo data from innertext
+      const amigo = e.target.innerText;
+      //split amigo data into array
+      const amigoData = amigo.split("#");
+  
+     
+   setAmigoNome(amigoData[0]);
+    setAmigoTag(amigoData[1]);
+    console .log(amigoNome);
+    console.log(amigoTag);
+     
+      //get friend name
+
     } else {
+      setAmigoNome("");
+      setAmigoTag("");
+      
       chat.classList.add("hidden");
     }
-    
+  };
 
-    
- }
 
-  const renderFriends = friends.map(({ id, Nome, tag }) => {
-    //remove user from friends list
-
+  const renderFriends = removeMyself.map(({ id, Nome, tag }) => {
     return (
       <div
-        className="flex flex-col w-full h-full p-2 rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
+        className="flex flex-col w-full h-full p-2 rounded-lg bg-gray-800 text-gray-200"
         onClick={handleDm}
         key={id}
+        id="dados"
       >
-       
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row items-center">
             <img
               src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
-                id + email + nome
+                 Nome+tag 
               }`}
               alt="user"
               width={40}
               height={40}
               className="rounded-full"
             />
-            <p className="px-2 text-lg">{Nome + "#" + tag}</p>
+            <p  className="px-1 text-lg">{Nome + "#" + tag}</p>
           </div>
         </div>
       </div>
     );
   });
-
-
 
   // getAll quarks then render it
   useEffect(() => {
@@ -187,7 +207,7 @@ export const SideBar = () => {
       .then((data) => {
         //if no quarks
         if (!data) {
-          return;
+          return null;
         } else {
           setQuarks(data.servers);
         }
@@ -197,74 +217,34 @@ export const SideBar = () => {
       });
   }, []);
 
-  //render quarks
+  //verify if user is in a quark
 
-  const renderQuarks = quarks.map(({ idunique, name, id }) => {
-    return (
-      <div
-        className="flex flex-col w-full h-full p-2 rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
-        key={idunique}
-      >
-        <div className="flex flex-row justify-between items-center">
-          <p>{name} </p>
-        </div>
-      </div>
-    );
-  });
-
-  function sendDm() {
-    //function to send dm
-    const [dm, setDm] = useState([]);
-    const [error, setError] = useState("");
-
-    const [amigoId, setAmigoId] = useState("");
-    const [mensagem, setMensagem] = useState("");
-    const [data, setData] = useState("");
-    const [hora, setHora] = useState("");
-    const [quark, setQuark] = useState("");
-
-    const [amigoNome, setAmigoNome] = useState("");
-
-    const token = localStorage.getItem("token");
-    const id = localStorage.getItem("id");
-    const nome = localStorage.getItem("nome");
-    const email = localStorage.getItem("email");
-
-    //amigo is a object that contais amigoID, amigoNome, amigoEmail
-
-    const amigo = {
-      amigoId: amigoId,
-      amigoNome: amigoNome,
-      amigoEmail: amigoEmail,
-    };
-
-    const handleDm = (e) => {
-      e.preventDefault();
-      fetch("", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          id: id,
-          mensagem: mensagem,
-          data: data,
-          hora: hora,
-          amigo: amigo,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setDm(data);
-        })
-        .catch((err) => {
-          setError(err);
-        });
-    };
+  function verificaQuarks() {
+    if (!quarks) {
+      return (
+        <p className="flex flex-col w-full h-full p-2 rounded-lg bg-gray-800 text-gray-200">
+          Não tens Quarks
+        </p>
+      );
+    } else {
+      quarks.map(({ idunique, name, id }) => {
+        return (
+          <div
+            className="flex flex-col w-full h-full p-2 rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
+            key={idunique}
+          >
+            <div className="flex flex-row justify-between items-center">
+              <p>{name} </p>
+            </div>
+          </div>
+        );
+      });
+    }
   }
 
-  //function create Quark
+  const renderQuarks = verificaQuarks();
+
+  function sendDm() {}
 
   return (
     <div className="flex flex-row min-h-full min-w-full  ">
@@ -432,9 +412,9 @@ export const SideBar = () => {
                 >
                   <li>{renderFriends}</li>
                 </ul>
-                <a
+                <a 
                   onClick={showInviteUsers}
-                  className="flex items-center p-3 text-sm font-medium text-blue-600 border-t border-gray-200 bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
+                  className=" hidden items-center p-3 text-sm font-medium text-blue-600 border-t border-gray-200 bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
                 >
                   <svg
                     className="w-5 h-5 mr-1"
@@ -742,16 +722,16 @@ export const SideBar = () => {
                   </svg>
                 </span>
                 <img
-                       src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
-                        id + email + nome
-                      }`}
+                  src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                     amigoNome + amigoTag 
+                  }`}
                   alt="/"
                   className="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
                 />
               </div>
               <div className="flex flex-col leading-tight">
                 <div className="text-2xl mt-1 flex items-center">
-                  <span className="text-gray-700 mr-3"></span>
+                  <span className="text-gray-700 mr-3"> {amigoNome +"#"+amigoTag}</span>
                 </div>
                 <span className="text-lg text-gray-600"></span>
               </div>
