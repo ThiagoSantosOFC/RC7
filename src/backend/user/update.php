@@ -11,6 +11,10 @@
         PRIMARY KEY (id)
     ) ENGINE=INNODB;
 
+
+    Update user
+    endpoint: /backend/user/update.php
+
     json post model:
     {
         "email": "email",

@@ -32,6 +32,9 @@
 
         This use get method
 
+        Get chat
+        endpoint: /backend/chat/get.php
+
         url params:
         uniqueid: string
         name: string 

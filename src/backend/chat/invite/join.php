@@ -41,6 +41,9 @@
         FOREIGN KEY (user) REFERENCES User(id)
     ) ENGINE=INNODB;
 
+
+    Join in server using the invite link
+    endpoint: /backend/chat/invite/join.php
     
     Post model
     {

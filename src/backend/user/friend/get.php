@@ -25,6 +25,7 @@
 
     Get friend
     Method GET
+    endpoint: /backend/user/friend/get.php
 
     url params:
     token=string

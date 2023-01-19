@@ -21,6 +21,9 @@
     ) ENGINE=INNODB;
   
 
+    Get all links of a chat
+    endpoint: /backend/chat/invite/get.php
+
     Get method
 
     Url params

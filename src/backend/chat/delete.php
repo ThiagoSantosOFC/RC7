@@ -11,6 +11,8 @@
         FOREIGN KEY (owner) REFERENCES User(id)
     ) ENGINE=INNODB;
 
+    Delete chat
+    endpoint: /backend/chat/delete.php
 
     json post model:
     {
@@ -58,8 +60,6 @@
         echo json_encode($json);
         exit();
     }
-
-    name
 
     // Get owner data
     $sql = "SELECT id, Token FROM User WHERE Token = '$owner_token'";

@@ -23,7 +23,8 @@
     ) ENGINE=INNODB;
 
 
-    CREATE FRIEND
+    Create friend
+    endpoint: /backend/user/friend/create.php
 
     post model
     {

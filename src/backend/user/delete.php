@@ -11,6 +11,9 @@
         PRIMARY KEY (id)
     ) ENGINE=INNODB;
 
+    Delete user
+    endpoint: /backend/user/delete.php
+
     json post model:
     {
         "token": "token"

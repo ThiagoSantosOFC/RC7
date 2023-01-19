@@ -8,6 +8,9 @@
         Token VARCHAR(500) NOT NULL,
         PRIMARY KEY (id)
     ) ENGINE=INNODB;
+        
+    Get user pfp
+    endpoint: /backend/user/getpfp.php
 
     Get Method:
     ?nome=

@@ -37,6 +37,8 @@
     Menbers, User and Roles
     Exept by User.Password
 
+    endpoint: /backend/chat/menbers/get.php
+
     INNER JOIN:
 
     SELECT Menbers.*, User.Email, User.Nome, User.Token, Roles.role, Chat.IdUnique

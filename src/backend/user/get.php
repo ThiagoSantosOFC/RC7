@@ -19,6 +19,9 @@
     ?user_tag=0000&nome=pedro <- The tag need to be passed with the name of the user
     ?nome=pedro&user_tag=9033
 
+    Get user
+    endpoint: /backend/user/get.php
+
     Json return for errors:
     {
         "status": "error",

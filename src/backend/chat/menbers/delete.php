@@ -38,6 +38,8 @@
     if yes user is validated
     if not reject
 
+    endpoint: /backend/chat/menbers/delete.php
+
     After validation just delete user
 
     POST json model

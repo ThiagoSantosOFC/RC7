@@ -19,7 +19,9 @@
         FOREIGN KEY (owner) REFERENCES User(id)
     ) ENGINE=INNODB;
 
-
+    Delete the invite link for join the server
+    endpoint: /backend/chat/invite/delete.php
+    
     Post model
     {
         "link": "string",

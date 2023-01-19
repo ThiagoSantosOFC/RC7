@@ -2,6 +2,9 @@
     /*
     Sql:
 
+    Create tables
+    endpoint: /backend/createdb.php
+
     -- Create tabe User if not EXISTS
     CREATE TABLE IF NOT EXISTS User (
         id INT NOT NULL AUTO_INCREMENT,

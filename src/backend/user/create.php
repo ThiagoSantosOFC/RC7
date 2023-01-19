@@ -20,7 +20,10 @@
         user INT NOT NULL,
         PRIMARY KEY (id),
         FOREIGN KEY (user) REFERENCES User(id)
-    ) ENGINE=INNODB;
+    ) ENGINE=INNODB;~
+
+    Create user
+    endpoint: /backend/user/create.php
 
     json post model:
     {

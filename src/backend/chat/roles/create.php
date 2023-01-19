@@ -31,7 +31,8 @@
             FOREIGN KEY (chatId) REFERENCES Chat(id)
         ) ENGINE=INNODB;
 
-        Method post
+        Create role for specific chat
+        endpoint: /backend/chat/roles/create.php	
 
         Json model
         {
