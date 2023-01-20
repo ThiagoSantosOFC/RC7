@@ -136,23 +136,82 @@ export const SideBar = () => {
     return friend.id !== id;
   });
 
-  //get id from friend
-
-  function pegaid  ()  {
-    //run friends array and get id from friend that matches with tag
-    //if no match return null
-    friends.map((friend) => {
-      if (friend.tag === amigoTag) {
-        setAmigoId(friend.id);
-        console.log(amigoId);
-      } else {
-        setAmigoId("");
-        return null;
-       
-      }
-    });
-  
+  //get friend id when click on friend name
+  const pegaid = (e) => {
+    const amigoTag = e.target.innerText.split("#")[1];
+    fetch("http://localhost/backend/user/get.php", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        //if no friends
+        if (!data) {
+          return;
+        } else {
+          const amigoId = data.user.filter((user) => {
+            return user.tag === amigoTag;
+          });
+          setAmigoId(amigoId[0].id);
+        }
+      })
+      .catch((err) => {
+        setError(err);
+      });
   };
+
+  //get messages from friend when click on friend name in dropdownUsers
+  // the end point is http://localhost/backend/user/friend/direct/get.php?token=token?friend=2
+  //using token and friend id
+
+  const getMessages = (e) => {
+    //get messages
+    fetch(
+      `http://localhost/backend/user/friend/direct/get.php?token=${token}&friend=${amigoId}`,
+      {
+        method: "GET",
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        //if no messages
+        if (!data) {
+          return;
+        } else {
+          setMessages(data.messages);
+          console.log(messages);
+
+        
+        }
+      })
+      .catch((err) => {
+        setError(err);
+      });
+  };
+
+  //run messages array  and show messages
+
+  const mostramsg = messages.map((message) => {
+    return (
+      <div className="flex flex-col">
+        <div className="flex items-center">
+          <div className="mr-2">
+        
+          </div>
+          <div className="flex flex-col">
+            <div className="flex items-center">
+              <div className="font-bold text-sm">{message.nome}</div>
+              <div className="text-xs text-gray-500 ml-2">{message.tag}</div>
+            </div>
+            <div className="text-sm">{message.message}</div>
+          </div>
+        </div>
+      </div>
+    );
+  });
+
+
+  
+
 
 
   const handleDm = (e) => {
@@ -168,17 +227,20 @@ export const SideBar = () => {
 
       setAmigoNome(amigoData[0]);
       setAmigoTag(amigoData[1]);
-      
-    //pegaid have to be executed after setAmigoTag
-    //because it needs the tag to get the id
-    pegaid();
-    console.log(amigoId);
+
+      pegaid(e);
+      getMessages(e);
+  
+
+      //pegaid have to be executed after setAmigoTag
+      //because it needs the tag to get the id
 
       //get friend name
     } else {
       setAmigoNome("");
       setAmigoTag("");
       setAmigoId("");
+      setMessage("");
 
       chat.classList.add("hidden");
     }
@@ -188,15 +250,11 @@ export const SideBar = () => {
     return (
       <div
         className="flex flex-col w-full h-full p-2 rounded-lg bg-gray-800 text-gray-200"
-        onClick={handleDm}
         key={id}
         id="dados"
       >
-        <div key={id}
-         onClick={handleDm}
-          className="flex flex-row justify-between items-center"
-        >
-          <div  className="flex flex-row items-center">
+        <div key={id} className="flex flex-row justify-between items-center">
+          <div className="flex flex-row items-center">
             <img
               src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
                 Nome + tag
@@ -206,14 +264,116 @@ export const SideBar = () => {
               height={40}
               className="rounded-full"
             />
-            <p  key={id} className="px-1 text-lg">{Nome + "#" + tag}</p>
+            <p key={id} onClick={handleDm} className="px-1 text-lg">
+              {Nome + "#" + tag}
+            </p>
           </div>
         </div>
       </div>
     );
   });
-//get direct messages 
- 
+  /*render messages will be like this  <div id="mymsg">
+              <div class="flex items-end justify-end">
+                <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
+                  <div>
+                    <span
+                     class="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white ">
+
+                    </span>
+                  </div>
+                </div>
+                <img
+                  src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                    nome + tag
+                  }`}
+                  alt="user"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              </div>
+              <div id="friendmsg">
+              <div class="flex items-start justify-start">
+                <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
+                  <div>
+                    <span
+                     class="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">
+
+                    </span>
+                  </div>
+                </div>
+                <img
+                  src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                    amigoNome + amigoTag
+                  }`}
+                  alt="user"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              </div>
+            </div>
+            </div>
+            in id mymsg the message will be on the right side
+            in id friendmsg the message will be on the left side
+
+            */
+
+  const renderMessages = messages.map(({ id, message, sender }) => {
+    if (sender === id) {
+      return (
+        <div id="mymsg" key={id}>
+          <div className="flex items-end justify-end">
+            <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
+              <div>
+                <span
+                  className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white "
+                  key={id}
+                >
+                  {message}
+                </span>
+              </div>
+            </div>
+            <img
+              src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                nome + tag
+              }`}
+              alt="user"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div id="friendmsg" key={id}>
+          <div className="flex items-start justify-start">
+            <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
+              <div>
+                <span
+                  className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600"
+                  key={id}
+                >
+                  {message}
+                </span>
+              </div>
+            </div>
+            <img
+              src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                amigoNome + amigoTag
+              }`}
+              alt="user"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+          </div>
+        </div>
+      );
+    }
+  });
 
 
   // getAll quarks then render it
@@ -464,10 +624,9 @@ export const SideBar = () => {
                 <ul
                   id="dropdownUsersList"
                   className="h-48 py-1 overflow-y-auto  dark:text-gray-200"
-                  
                   aria-labelledby="dropdownUsersButton"
                 >
-                  <li key = {amigoId} >{renderFriends}</li>
+                  <li key={amigoId}>{renderFriends}</li>
                 </ul>
                 <a
                   onClick={showInviteUsers}
@@ -689,7 +848,7 @@ export const SideBar = () => {
                 <img
                   className="rounded-full"
                   src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
-                    id + email + nome
+                    nome + tag
                   }`}
                   alt="avatar"
                   width={40}
@@ -821,7 +980,9 @@ export const SideBar = () => {
           <div
             id="messages"
             className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
-          ></div>
+          >
+          
+          </div>
           <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
             <div className="relative flex">
               <span className="absolute inset-y-0 flex items-center"></span>
