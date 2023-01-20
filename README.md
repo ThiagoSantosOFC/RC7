@@ -95,7 +95,7 @@ Header set Access-Control-Allow-Headers "X-Requested-With, Content-Type, X-Token
 
 </div>
 
-<p> Página princiapal </p>
+<p> Página principal </p>
 <br/>
 
 
