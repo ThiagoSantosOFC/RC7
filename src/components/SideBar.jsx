@@ -181,6 +181,7 @@ export const SideBar = () => {
         } else {
           setMessages(data.messages);
           console.log(messages);
+          console.log(id)
         }
       })
       .catch((err) => {
@@ -212,7 +213,8 @@ export const SideBar = () => {
     } else {
       setAmigoNome("");
       setAmigoTag("");
-
+      setAmigoId("");
+      setMessages([]);
       setMessage("");
 
       chat.classList.add("hidden");
@@ -296,74 +298,61 @@ export const SideBar = () => {
 
             */
 
-  const renderMessages = messages.map(({ id, user, friend, message, date }) => {
-    //filter messages by user and friend
-    const myMessages = messages.filter((message) => {
-      return message.user === id;
-    });
-    const friendMessages = messages.filter((message) => {
-      return message.friend === amigoId;
-    });
-    //render messages by user and friend
-    const renderMyMessages = myMessages.map(
-      ({ id, user, friend, message, date }) => {
-        return (
-          <div id="mymsg" key={user}>
-            <div className="flex items-end justify-end">
-              <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-                <div>
-                  <span className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white">
-                    {message}
-                  </span>
-                </div>
+  const renderMessages = messages.map(({ user, friend, message, date }) => {
+
+//create an object from message 
+
+
+    // if message doesnt have a user = id then it is a friend message
+    //if message has a user = id then it is a user message
+    //if none of them is true then it is a message from another user
+    if (friend == amigoId) {
+      return (
+        <div id="friendmsg">
+          <div className="flex items-start justify-start">
+            <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
+              <div>
+                <span className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600 ">
+                  {message}
+                </span>
               </div>
-              <img
-                src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
-                  nome + tag
-                }`}
-                alt="user"
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
             </div>
+            <img
+              src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                amigoNome + amigoTag
+              }`}
+              alt="user"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
           </div>
-        );
-      }
-    );
-    const renderFriendMessages = friendMessages.map(
-      ({ id, user, friend, message, date }) => {
-        return (
-          <div id="friendmsg" key={friend}>
-            <div className="flex items-start justify-start">
-              <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-                <div>
-                  <span className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">
-                    {message}
-                  </span>
-                </div>
+        </div>
+      );
+    } else if (user == id) {
+      return (
+        <div id="mymsg">
+          <div className="flex items-end justify-end">
+            <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-end">
+              <div>
+                <span className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white ">
+                  {message}
+                </span>
               </div>
-              <img
-                src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
-                  amigoNome + amigoTag
-                }`}
-                alt="user"
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
             </div>
+            <img
+              src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                nome + tag
+              }`}
+              alt="user"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
           </div>
-        );
-        //now render all 
- 
-
-
-
-
-      }
-
-    );
+        </div>
+      );
+    }
   });
 
   // getAll quarks then render it
@@ -444,6 +433,8 @@ export const SideBar = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        //render messages
+        renderMessages();
         setMessage("");
         console.log(data);
       })
@@ -971,7 +962,6 @@ export const SideBar = () => {
             id="messages"
             className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
           >
-            
             {renderMessages}
           </div>
           <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
