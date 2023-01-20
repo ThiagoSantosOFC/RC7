@@ -164,6 +164,7 @@ export const SideBar = () => {
   //using token and friend id
 
   const getMessages = (e) => {
+    pegaid(e);
     //get messages
     fetch(
       `http://localhost/backend/user/friend/direct/get.php?token=${token}&friend=${amigoId}`,
@@ -188,26 +189,7 @@ export const SideBar = () => {
       });
   };
 
-  //run messages array  and show messages
 
-  const mostramsg = messages.map((message) => {
-    return (
-      <div className="flex flex-col">
-        <div className="flex items-center">
-          <div className="mr-2">
-        
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center">
-              <div className="font-bold text-sm">{message.nome}</div>
-              <div className="text-xs text-gray-500 ml-2">{message.tag}</div>
-            </div>
-            <div className="text-sm">{message.message}</div>
-          </div>
-        </div>
-      </div>
-    );
-  });
 
 
   
@@ -272,7 +254,11 @@ export const SideBar = () => {
       </div>
     );
   });
-  /*render messages will be like this  <div id="mymsg">
+  /*render messages will be like this 
+  messages is an array of objects with id, user, friend,message, date
+
+
+  <div id="mymsg">
               <div class="flex items-end justify-end">
                 <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
                   <div>
@@ -314,22 +300,21 @@ export const SideBar = () => {
               </div>
             </div>
             </div>
-            in id mymsg the message will be on the right side
-            in id friendmsg the message will be on the left side
+            in div id mymsg the message will be on the right side
+            in div id friendmsg the message will be on the left side
 
             */
+          
+  const renderMessages = messages.map(({ id, user, friend, message, date }) => {
+   //if user is the same as the logged user
+    if (user === id) {
 
-  const renderMessages = messages.map(({ id, message, sender }) => {
-    if (sender === id) {
       return (
-        <div id="mymsg" key={id}>
+        <div key={id} id="mymsg">
           <div className="flex items-end justify-end">
             <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
               <div>
-                <span
-                  className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white "
-                  key={id}
-                >
+                <span className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white ">
                   {message}
                 </span>
               </div>
@@ -346,16 +331,15 @@ export const SideBar = () => {
           </div>
         </div>
       );
-    } else {
+     
+
+    } else if (friend === amigoId) {
       return (
-        <div id="friendmsg" key={id}>
+        <div key={id} id="friendmsg">
           <div className="flex items-start justify-start">
             <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
               <div>
-                <span
-                  className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600"
-                  key={id}
-                >
+                <span className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600 ">
                   {message}
                 </span>
               </div>
@@ -372,8 +356,13 @@ export const SideBar = () => {
           </div>
         </div>
       );
+    } else {
+      return null;
     }
-  });
+
+
+});
+  
 
 
   // getAll quarks then render it
@@ -981,7 +970,8 @@ export const SideBar = () => {
             id="messages"
             className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
           >
-          
+          {renderMessages}
+
           </div>
           <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
             <div className="relative flex">
