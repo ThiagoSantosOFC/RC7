@@ -16,7 +16,9 @@ para executar o projeto é necesario:
 </li>
 <li>
 <a href="https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable">Yarn | Gestor de pacotes<a/> 
+  <li>
 <a href="https://www.youtube.com/watch?v=Ps17izoF5pc">Video tutorial para instalar o Yarn </a>
+    </li>
 </li>
 </ul>
 <p> Apos clonar o repositorio, vá até o Diretório  /src e no console do VScode digite: </p>
