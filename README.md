@@ -94,4 +94,12 @@ Header set Access-Control-Allow-Headers "X-Requested-With, Content-Type, X-Token
 </div>
 
 <p> Página princiapal </p>
+<br/>
 
+
+<div>
+
+![image](https://user-images.githubusercontent.com/74683757/213818683-93c3a6b1-ef25-44a8-92d9-80fc4db962a0.png)
+</div>
+
+<p>Menu de alteração de credenciais</p>
