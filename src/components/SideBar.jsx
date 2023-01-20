@@ -138,17 +138,22 @@ export const SideBar = () => {
 
   //get id from friend
 
-  const pegaid = () => {
-    //run frieds array and get id from friend that matches with tag
-    const idamigo = friends.filter((friend) => {
-      return friend.tag == amigoTag;
+  function pegaid  ()  {
+    //run friends array and get id from friend that matches with tag
+    //if no match return null
+    friends.map((friend) => {
+      if (friend.tag === amigoTag) {
+        setAmigoId(friend.id);
+        console.log(amigoId);
+      } else {
+        setAmigoId("");
+        return null;
+       
+      }
     });
-    let map = idamigo.map(({ id }) => id);
-
-    setAmigoId(map[0]);
-
-    console.log(amigoId);
+  
   };
+
 
   const handleDm = (e) => {
     //get chat element by id then show it with friend info
@@ -163,13 +168,18 @@ export const SideBar = () => {
 
       setAmigoNome(amigoData[0]);
       setAmigoTag(amigoData[1]);
-      pegaid();
+      
+    //pegaid have to be executed after setAmigoTag
+    //because it needs the tag to get the id
+    pegaid();
+    console.log(amigoId);
 
       //get friend name
     } else {
       setAmigoNome("");
       setAmigoTag("");
-      setMessages("");
+      setAmigoId("");
+
       chat.classList.add("hidden");
     }
   };
@@ -182,11 +192,11 @@ export const SideBar = () => {
         key={id}
         id="dados"
       >
-        <div
-          onClick={handleDm}
+        <div key={id}
+         onClick={handleDm}
           className="flex flex-row justify-between items-center"
         >
-          <div onClick={handleDm} className="flex flex-row items-center">
+          <div  className="flex flex-row items-center">
             <img
               src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
                 Nome + tag
@@ -196,12 +206,15 @@ export const SideBar = () => {
               height={40}
               className="rounded-full"
             />
-            <p className="px-1 text-lg">{Nome + "#" + tag}</p>
+            <p  key={id} className="px-1 text-lg">{Nome + "#" + tag}</p>
           </div>
         </div>
       </div>
     );
   });
+//get direct messages 
+ 
+
 
   // getAll quarks then render it
   useEffect(() => {
@@ -255,13 +268,19 @@ export const SideBar = () => {
   const renderQuarks = verificaQuarks();
 
   const handleMessagesChange = (e) => {
-    setMessages(e.target.value);
+    //if message is empty clear the input
+    if (e.target.value === "") {
+      setMessage("");
+    }
+    setMessage(e.target.value);
   };
   //const send message
   const sendMessage = () => {
     //get token from local storage
     const token = localStorage.getItem("token");
-
+    console.log(token);
+    console.log(amigoId);
+    console.log(message);
     fetch("http://localhost/backend/user/friend/direct/create.php", {
       method: "POST",
       headers: {
@@ -270,12 +289,12 @@ export const SideBar = () => {
       body: JSON.stringify({
         token: token,
         friend: amigoId,
-        message: messages,
+        message: message,
       }),
     })
       .then((res) => res.json())
       .then((data) => {
-        setMessages("");
+        setMessage("");
         console.log(data);
       })
       .catch((err) => {
@@ -445,9 +464,10 @@ export const SideBar = () => {
                 <ul
                   id="dropdownUsersList"
                   className="h-48 py-1 overflow-y-auto  dark:text-gray-200"
+                  
                   aria-labelledby="dropdownUsersButton"
                 >
-                  <li>{renderFriends}</li>
+                  <li key = {amigoId} >{renderFriends}</li>
                 </ul>
                 <a
                   onClick={showInviteUsers}
@@ -777,7 +797,6 @@ export const SideBar = () => {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-
               <button
                 type="button"
                 className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
