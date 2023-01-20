@@ -148,10 +148,11 @@ export const SideBar = () => {
         if (!data) {
           return;
         } else {
-          const amigoId = data.user.filter((user) => {
+          const idamigo = data.user.filter((user) => {
             return user.tag === amigoTag;
           });
-          setAmigoId(amigoId[0].id);
+          setAmigoId(idamigo[0].id);
+          console.log(amigoId);
         }
       })
       .catch((err) => {
@@ -167,7 +168,7 @@ export const SideBar = () => {
     pegaid(e);
     //get messages
     fetch(
-      `http://localhost/backend/user/friend/direct/get.php?token=${token}&friend=${amigoId}`,
+      `http://localhost/backend/user/friend/direct/get.php?token=${token}`,
       {
         method: "GET",
       }
@@ -180,21 +181,12 @@ export const SideBar = () => {
         } else {
           setMessages(data.messages);
           console.log(messages);
-
-        
         }
       })
       .catch((err) => {
         setError(err);
       });
   };
-
-
-
-
-  
-
-
 
   const handleDm = (e) => {
     //get chat element by id then show it with friend info
@@ -212,7 +204,6 @@ export const SideBar = () => {
 
       pegaid(e);
       getMessages(e);
-  
 
       //pegaid have to be executed after setAmigoTag
       //because it needs the tag to get the id
@@ -221,7 +212,7 @@ export const SideBar = () => {
     } else {
       setAmigoNome("");
       setAmigoTag("");
-      setAmigoId("");
+
       setMessage("");
 
       chat.classList.add("hidden");
@@ -304,66 +295,76 @@ export const SideBar = () => {
             in div id friendmsg the message will be on the left side
 
             */
-          
+
   const renderMessages = messages.map(({ id, user, friend, message, date }) => {
-   //if user is the same as the logged user
-    if (user === id) {
-
-      return (
-        <div key={id} id="mymsg">
-          <div className="flex items-end justify-end">
-            <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-              <div>
-                <span className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white ">
-                  {message}
-                </span>
+    //filter messages by user and friend
+    const myMessages = messages.filter((message) => {
+      return message.user === id;
+    });
+    const friendMessages = messages.filter((message) => {
+      return message.friend === amigoId;
+    });
+    //render messages by user and friend
+    const renderMyMessages = myMessages.map(
+      ({ id, user, friend, message, date }) => {
+        return (
+          <div id="mymsg" key={user}>
+            <div className="flex items-end justify-end">
+              <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
+                <div>
+                  <span className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white">
+                    {message}
+                  </span>
+                </div>
               </div>
+              <img
+                src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                  nome + tag
+                }`}
+                alt="user"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
             </div>
-            <img
-              src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
-                nome + tag
-              }`}
-              alt="user"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
           </div>
-        </div>
-      );
-     
-
-    } else if (friend === amigoId) {
-      return (
-        <div key={id} id="friendmsg">
-          <div className="flex items-start justify-start">
-            <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-              <div>
-                <span className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600 ">
-                  {message}
-                </span>
+        );
+      }
+    );
+    const renderFriendMessages = friendMessages.map(
+      ({ id, user, friend, message, date }) => {
+        return (
+          <div id="friendmsg" key={friend}>
+            <div className="flex items-start justify-start">
+              <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
+                <div>
+                  <span className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">
+                    {message}
+                  </span>
+                </div>
               </div>
+              <img
+                src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
+                  amigoNome + amigoTag
+                }`}
+                alt="user"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
             </div>
-            <img
-              src={`https://api.dicebear.com/5.x/adventurer-neutral/svg?seed=${
-                amigoNome + amigoTag
-              }`}
-              alt="user"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
           </div>
-        </div>
-      );
-    } else {
-      return null;
-    }
+        );
+        //now render all 
+ 
 
 
-});
-  
 
+
+      }
+
+    );
+  });
 
   // getAll quarks then render it
   useEffect(() => {
@@ -970,8 +971,8 @@ export const SideBar = () => {
             id="messages"
             className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
           >
-          {renderMessages}
-
+            
+            {renderMessages}
           </div>
           <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
             <div className="relative flex">
