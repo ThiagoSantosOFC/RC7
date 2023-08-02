@@ -39,7 +39,7 @@ yarn dev
 <p>Vale lembrar que também é importante iniciar o serviço Apache e MySql no Xampp </p>
 <p>Também é importante verificar se as portas condizem com as do ficheiro conn.php </p>
 
-<p>Para criar a base de dados criar uma db com nome de quark_db e ir ate src/backend/createdb.php que a base de dados será criada </p>
+<p>Para configurar a base de dados é preciso criar uma db com nome de quark_db e logo após ir ate src/backend/createdb.php que a base de dados será criada </p>
 
 
 `create database quark_db`
